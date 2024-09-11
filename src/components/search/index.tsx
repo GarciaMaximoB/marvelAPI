@@ -1,4 +1,4 @@
-import styles from "./index.modules.scss"
+import styles from "./index.module.scss"
 import Image from "next/image"
 
 export default function Search(){

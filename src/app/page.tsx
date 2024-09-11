@@ -1,6 +1,7 @@
 import Image from "next/image";
-import styles from "./index.modules.scss"
+import styles from "./index.module.scss"
 import Search from "@/components/search";
+import Card from "@/components/card";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
           height={66.19}
         />
         <Search/>
+        <Card/>
       </header>
     </div>
   );
