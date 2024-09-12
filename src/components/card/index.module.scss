@@ -1,3 +1,42 @@
+@import "../../scss/mixins";
+
 .mycard{
-    background-color: aqua;
+    cursor: pointer;
+    flex: 1 1 calc(25% - 45px);
+    box-sizing: border-box;
+    padding: 16px;
+    padding: 20px 30px ;
+    background-color: rgba(217, 217, 217, 0.25);
+    @include FlexColCenter;
+    border-radius: 27px;
+    @include Shadow( 0px, 7px , 10px);
+    transition: 0.3s all ease;
+}
+
+.mycard:hover{
+    transform: scale(1.025);
+}
+
+.imagePortada{
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.comicTitle{
+    width: 100%;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.comicPages{
+    font-size: 14px;
+    font-weight: 300;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.comicFav{
+    cursor: pointer;
+    align-self: flex-end;
 }

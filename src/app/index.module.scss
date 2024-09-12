@@ -1,7 +1,19 @@
+@import "../scss/mixins";
+
+.contenedor{
+  padding: 20px 0px;
+  width: 100%;
+  @include FlexColCenter
+}
+
 .header{
-    display: flex;
-    flex-direction:column ;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0;
+    @include FlexColCenter;
+}
+
+.cardsWrapper{
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 45px;
+  width: 70%;
 }

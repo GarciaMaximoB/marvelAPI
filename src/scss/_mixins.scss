@@ -1,0 +1,12 @@
+@mixin FlexColCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin Shadow($x,$y,$blur){
+    box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
+    -webkit-box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
+}
