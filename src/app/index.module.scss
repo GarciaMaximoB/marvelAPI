@@ -1,13 +1,9 @@
 @import "../scss/mixins";
 
-.contenedor{
-  padding: 20px 0px;
+.header{
+  padding-top: 20px;
   width: 100%;
   @include FlexColCenter
-}
-
-.header{
-    @include FlexColCenter;
 }
 
 .cardsWrapper{

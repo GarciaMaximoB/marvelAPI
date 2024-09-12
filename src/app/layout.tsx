@@ -16,20 +16,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={robotoCondensed.className}>
-        <div className={styles.contenedor}>
-        <Link
-          href="/"
-        >
-        <Image
-          src='/logoMarvel.png'
-          alt="Marvel Logo"
-          width={165}
-          height={66.19}
-        />
-        </Link>
+        <header className={styles.header}>
+          <Link
+            href="/"
+          >
+          <Image
+            src='/logoMarvel.png'
+            alt="Marvel Logo"
+            width={165}
+            height={66.19}
+          />
+          </Link>
+        </header>
           {children}
-        </div>
-        
       </body>
     </html>
   );
