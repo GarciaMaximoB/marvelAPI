@@ -1,15 +1,52 @@
 @import "../scss/mixins";
 
-.header{
+.header {
   padding-top: 20px;
   width: 100%;
-  @include FlexColCenter
+  @include FlexColCenter;
 }
 
-.cardsWrapper{
-  margin-top: 50px;
+.cardsWrapper {
+  margin-top: 25px;
   display: flex;
   flex-wrap: wrap;
   gap: 45px;
   width: 70%;
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  margin-top: 50px;
+  width: 70%;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.filters{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+}
+
+.filters select{
+  width: 33%;
+}
+.buttonsContainer svg {
+  margin-right: 10px;
+}
+.buttonsContainer .createButton {
+  @include Button(#1dad00);
+  margin-right: auto;
+}
+
+.buttonsContainer .favButton {
+  @include Button(#fbb317);
 }
