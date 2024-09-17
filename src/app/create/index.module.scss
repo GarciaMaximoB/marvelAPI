@@ -4,8 +4,19 @@
   color: white;
 }
 
+.pageContainer{
+  @include FlexColCenter;
+  min-height: calc(100vh - 96px);
+
+}
+
 .container {
   @include FlexColCenter;
-  width: 100vw;
-  height: 100%;
+  background-color: #c9c3ff12;
+  padding: 40px;
+  border-radius: 20px;
+}
+
+.createTitle{
+  margin-bottom: 2.5%;
 }
