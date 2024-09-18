@@ -1,24 +1,28 @@
 @mixin FlexColCenter {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-@mixin Shadow($x,$y,$blur){
-    box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
-    -webkit-box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
-    -moz-box-shadow: $x $y $blur 0px rgba(0,0,0,0.25);
+@mixin Shadow($x, $y, $blur) {
+  box-shadow: $x $y $blur 0px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: $x $y $blur 0px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: $x $y $blur 0px rgba(0, 0, 0, 0.25);
 }
 
-@mixin Button($color){
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    padding:9px 15px;
-    background-color: $color;
-    color: white;
-    border-radius: 3px;
-    font-weight: 500;
+@mixin Button($color) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  padding: 9px 15px;
+  background-color: $color;
+  color: white;
+  border-radius: 3px;
+  font-weight: 500;
+  transition: 0.3s all ease;
+  &:hover {
+    background-color: darken($color, 7%);
+  }
 }
