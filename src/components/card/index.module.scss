@@ -19,6 +19,7 @@
 
 .imagePortada {
   width: 100%;
+  object-fit: cover; /* Hace que la imagen se recorte sin estirarse */
   border-radius: 10px;
   margin-bottom: 10px;
 }

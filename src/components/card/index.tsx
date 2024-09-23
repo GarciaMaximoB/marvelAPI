@@ -4,7 +4,17 @@ import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Card() {
+export default function Card({
+  id,
+  image,
+  title,
+  pages,
+}: {
+  id: number;
+  image: { path: string; extension: string };
+  title: string;
+  pages: number;
+}) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const router = useRouter();
@@ -13,20 +23,16 @@ export default function Card() {
     setIsFavorite(!isFavorite);
   };
 
-  const id = 1;
-
   return (
-    <div className={styles.mycard}>
+    <div className={styles.mycard} key={id}>
       <div onClick={() => router.push(`/comic/${id}`)}>
         <img
-          src="/spiderman-comic.jpg"
-          alt="Tapa de comic de spiderman"
+          src={`${image.path}.${image.extension}`}
+          alt={title}
           className={styles.imagePortada}
         />
-        <p className={styles.comicTitle}>
-          SPIDER-MAN: HOMEROOM HEROES (2024) #1
-        </p>
-        <p className={styles.comicPages}>32 pages</p>
+        <p className={styles.comicTitle}>{title}</p>
+        <p className={styles.comicPages}>{pages} páginas</p>
       </div>
 
       {isFavorite ? (

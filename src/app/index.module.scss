@@ -6,14 +6,6 @@
   @include FlexColCenter;
 }
 
-.cardsWrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 45px;
-  width: 70%;
-  padding: 30px 0;
-}
-
 .buttonsContainer {
   display: flex;
   align-items: center;
@@ -28,7 +20,7 @@
   gap: 10px;
 }
 
-.filters{
+.filters {
   width: 50%;
   display: flex;
   align-items: center;
@@ -36,7 +28,7 @@
   gap: 10px;
 }
 
-.filters select{
+.filters select {
   width: 33%;
 }
 .buttonsContainer svg {
