@@ -2,9 +2,20 @@ import { create } from "zustand";
 import { IComic } from "@/types";
 interface IDataGlobalState {
   comics: IComic[];
+  comic: IComic;
 }
 const initialData: IDataGlobalState = {
   comics: [],
+  comic: {
+    id: 0,
+    title: "",
+    description: "",
+    sale_date: "",
+    characters: [],
+    pageCount: 0,
+    thumbnail: { path: "", extension: "" },
+    source: "",
+  },
 };
 const globalDataState = create(() => initialData);
 export const GlobalStateService = {
@@ -20,6 +31,31 @@ export const GlobalStateService = {
     globalDataState.setState((prev) => ({
       ...prev,
       comics: [],
+    }));
+  },
+
+  //UN COMIC
+  getComicData() {
+    return globalDataState((state) => state.comic);
+  },
+  setComicData(comicData: IComic) {
+    globalDataState.setState({
+      comic: comicData,
+    });
+  },
+  removeComicData() {
+    globalDataState.setState((prev) => ({
+      ...prev,
+      comic: {
+        id: 0,
+        title: "",
+        description: "",
+        sale_date: "",
+        characters: [],
+        pageCount: 0,
+        thumbnail: { path: "", extension: "" },
+        source: "",
+      },
     }));
   },
 };
