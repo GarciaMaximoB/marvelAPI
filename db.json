@@ -1,0 +1,16 @@
+{
+  "favComics": [
+    {
+      "id": "1",
+      "title": "Spider-Man",
+      "description": "A superhero comic",
+      "thumbnail": "spider-man.jpg"
+    },
+    {
+      "id": "2",
+      "title": "Iron Man",
+      "description": "Another superhero comic",
+      "thumbnail": "iron-man.jpg"
+    }
+  ]
+}
