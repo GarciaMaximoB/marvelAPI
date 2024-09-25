@@ -3,18 +3,9 @@ import styles from "./index.module.scss";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { IComic } from "@/types";
 
-export default function Card({
-  id,
-  image,
-  title,
-  pages,
-}: {
-  id: number;
-  image: { path: string; extension: string };
-  title: string;
-  pages: number;
-}) {
+export default function Card({ comic }: { comic: IComic }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const router = useRouter();
@@ -23,16 +14,22 @@ export default function Card({
     setIsFavorite(!isFavorite);
   };
 
+  if (!comic) return <div>No hay comics</div>;
+
   return (
-    <div className={styles.mycard} key={id}>
-      <div onClick={() => router.push(`/comic/${id}`)}>
+    <div className={styles.mycard} key={comic.id}>
+      <div onClick={() => router.push(`/comic/${comic.id}`)}>
         <img
-          src={`${image.path}.${image.extension}`}
-          alt={title}
+          src={`${
+            comic
+              ? `${comic.thumbnail.path}.${comic.thumbnail.extension}`
+              : "/logoMarvel.png"
+          }`}
+          alt={comic ? comic.title : ""}
           className={styles.imagePortada}
         />
-        <p className={styles.comicTitle}>{title}</p>
-        <p className={styles.comicPages}>{pages} páginas</p>
+        <p className={styles.comicTitle}>{comic.title}</p>
+        <p className={styles.comicPages}>{comic.pageCount} páginas</p>
       </div>
 
       {isFavorite ? (

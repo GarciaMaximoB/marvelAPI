@@ -20,15 +20,7 @@ export default function Comics() {
   return (
     <div className={styles.cardsWrapper}>
       {Array.isArray(comics) &&
-        comics.map((comic) => (
-          <Card
-            key={comic.id}
-            image={comic.thumbnail}
-            title={comic.title}
-            pages={comic.pageCount}
-            id={comic.id}
-          />
-        ))}
+        comics.map((comic) => <Card key={comic.id} comic={comic} />)}
     </div>
   );
 }
