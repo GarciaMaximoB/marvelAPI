@@ -20,9 +20,20 @@ const getComic = async ({ id }: { id: string }) => {
   }
 };
 
+const getFavComics = async () => {
+  try {
+    const { data } = await axiosInstance.get("/favcomics");
+    return data;
+  } catch (errorAPI: any) {
+    console.log({ errorAPI });
+    throw new Error(errorAPI.message);
+  }
+};
+
 const APIService = {
   getComics,
   getComic,
+  getFavComics,
 };
 
 export default APIService;

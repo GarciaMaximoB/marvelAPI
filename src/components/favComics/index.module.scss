@@ -1,0 +1,8 @@
+.cardsWrapper {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Cuatro columnas de igual tamaño */
+  gap: 20px; /* Espaciado entre las tarjetas */
+  padding: 20px; /* Espaciado interno del contenedor */
+  max-width: 70%;
+}

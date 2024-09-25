@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { IComic } from "@/types";
 interface IDataGlobalState {
   comics: IComic[];
+  favComics: IComic[];
   comic: IComic;
 }
 const initialData: IDataGlobalState = {
   comics: [],
+  favComics: [],
   comic: {
     id: 0,
     title: "",
@@ -56,6 +58,23 @@ export const GlobalStateService = {
         thumbnail: { path: "", extension: "" },
         source: "",
       },
+    }));
+  },
+
+  //FAVOURITE COMICS
+  getFavComicsData() {
+    // return globalDataState((state) => state.favComics);
+    return globalDataState.getState().favComics
+  },
+  setFavComicsData(favComicsData: IComic[]) {
+    globalDataState.setState({
+      favComics: favComicsData,
+    });
+  },
+  removeFavComicsData() {
+    globalDataState.setState((prev) => ({
+      ...prev,
+      comics: [],
     }));
   },
 };
