@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
 
 import styles from "./index.module.scss";
-export default function ComicPage({ params }: { params: { id: string } }) {
+export default function ComicPage({ params }: { params: { id: number } }) {
   const [loading, setLoading] = useState(true);
   const comic = GlobalStateService.getComicData();
 
