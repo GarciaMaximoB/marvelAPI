@@ -5,14 +5,19 @@ import styles from "./index.module.scss";
 import Card from "../card";
 import { useEffect, useState } from "react";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
+
 export default function Comics() {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData() || [];
 
   useEffect(() => {
-    ComicsUseCases.retrieveComics().finally(() => {
-      setLoading(false);
-    });
+    ComicsUseCases.retrieveComics()
+      .then(() => {
+        ComicsUseCases.retrieveFavComics();
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (loading) return <p>Cargando comics...</p>;
