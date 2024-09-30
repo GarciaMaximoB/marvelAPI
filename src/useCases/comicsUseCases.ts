@@ -14,7 +14,7 @@ const retrieveComics = async () => {
   }
 };
 
-const retrieveComic = async ({ id }: { id: string }) => {
+const retrieveComic = async ({ id }: { id: number }) => {
   try {
     const response = await APIService.getComic({ id });
     GlobalStateService.setComicData(response[0]);
@@ -28,7 +28,12 @@ const retrieveComic = async ({ id }: { id: string }) => {
 const retrieveFavComics = async () => {
   try {
     const response = await APIService.getFavComics();
-    GlobalStateService.setFavComicsData(response);
+    const map = new Map(
+      response.map((res: any) => {
+        return [res.id, res];
+      })
+    );
+    GlobalStateService.setFavComicsData(map);
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });
     ErrorService.handleError(errorUseCase);
@@ -36,33 +41,27 @@ const retrieveFavComics = async () => {
   }
 };
 
-// const addFavComic = (comic: any) => {
-//   try {
-//     const currentFavComics = GlobalStateService.getFavComicsData();
+const IsInFavourites = (id: number): boolean => {
+  const favourites = GlobalStateService.getFavComicsDataOutsideComponent();
+  console.log(favourites);
+  if (favourites.size >= 1) {
+    return favourites.has(id);
+  }
+  return false;
+};
 
-//     const isAlreadyFav = currentFavComics.some(
-//       (favComic: any) => favComic.id === comic.id
-//     );
-
-//     let updatedFavComics;
-
-//     if (isAlreadyFav) {
-//       updatedFavComics = currentFavComics.filter(
-//         (favComic: any) => favComic.id !== comic.id
-//       );
-//     } else {
-//       updatedFavComics = [...currentFavComics, comic];
-//     }
-
-//     GlobalStateService.setFavComicsData(updatedFavComics);
-//   } catch (errorUseCase: any) {
-//     console.log({ errorUseCase });
-//     ErrorService.handleError(errorUseCase);
-//   }
-// };
+const addToFavourites = async (id: number) => {
+  const favourites = GlobalStateService.getFavComicsDataOutsideComponent();
+  if (favourites.has(id)) {
+    await APIService.deleteFromFavourites(id);
+  } else {
+  }
+};
 
 export const ComicsUseCases = {
   retrieveComics,
   retrieveComic,
   retrieveFavComics,
+  IsInFavourites,
+  addToFavourites,
 };

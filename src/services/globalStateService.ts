@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { IComic } from "@/types";
+
 interface IDataGlobalState {
   comics: IComic[];
-  favComics: IComic[];
+  favComics: Map<number, IComic>;
   comic: IComic;
 }
 const initialData: IDataGlobalState = {
   comics: [],
-  favComics: [],
+  favComics: new Map([]),
   comic: {
     id: 0,
     title: "",
@@ -19,6 +20,7 @@ const initialData: IDataGlobalState = {
     source: "",
   },
 };
+
 const globalDataState = create(() => initialData);
 export const GlobalStateService = {
   getComicsData() {
@@ -63,10 +65,9 @@ export const GlobalStateService = {
 
   //FAVOURITE COMICS
   getFavComicsData() {
-    // return globalDataState((state) => state.favComics);
-    return globalDataState.getState().favComics
+    return globalDataState((state) => state.favComics);
   },
-  setFavComicsData(favComicsData: IComic[]) {
+  setFavComicsData(favComicsData: Map<number, IComic>) {
     globalDataState.setState({
       favComics: favComicsData,
     });
@@ -74,7 +75,23 @@ export const GlobalStateService = {
   removeFavComicsData() {
     globalDataState.setState((prev) => ({
       ...prev,
-      comics: [],
+      favComics: new Map(),
     }));
+  },
+
+  removeComicFromFavourites(comicId: number) {
+    const favComics = this.getFavComicsData() || new Map();
+    favComics.delete(comicId);
+    this.setFavComicsData(favComics);
+  },
+
+  addToFavourites(comic: IComic) {
+    const favComics = this.getFavComicsData() || new Map();
+    favComics.set(comic.id, comic);
+    this.setFavComicsData(favComics);
+  },
+
+  getFavComicsDataOutsideComponent() {
+    return globalDataState.getState().favComics;
   },
 };

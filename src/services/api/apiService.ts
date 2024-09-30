@@ -10,7 +10,7 @@ const getComics = async () => {
   }
 };
 
-const getComic = async ({ id }: { id: string }) => {
+const getComic = async ({ id }: { id: number }) => {
   try {
     const { data } = await axiosInstance.get(`/comics/${id}`);
     return data;
@@ -30,10 +30,30 @@ const getFavComics = async () => {
   }
 };
 
+const deleteFromFavourites = async (id: number) => {
+  try {
+    const res = await axiosInstance.delete(`/favcomics/${id}`);
+    return res;
+  } catch (errorAPI: any) {
+    console.log({ errorAPI });
+    throw new Error(errorAPI.message);
+  }
+};
+
+const toggleFavourite = async (request: any) => {
+  try {
+    await axiosInstance.post("/favcomics", request);
+  } catch (errorAPI: any) {
+    console.log({ errorAPI });
+    throw new Error(errorAPI.message);
+  }
+};
+
 const APIService = {
   getComics,
   getComic,
   getFavComics,
+  deleteFromFavourites,
 };
 
 export default APIService;
