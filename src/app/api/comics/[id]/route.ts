@@ -9,7 +9,7 @@ export async function GET(req: NextApiRequest, context: any) {
 
     const comic = data.data.results.map((comic: any) => {
       const saleDate =
-        comic.dates.find((dateObj: any) => dateObj.type === "onsaleDate")
+        comic.dates.find((date: any) => date.type === "onsaleDate")
           ?.date || "";
           
       const formattedSaleDate = saleDate ? saleDate.split("T")[0] : "";
