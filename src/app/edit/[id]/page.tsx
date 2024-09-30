@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 
 import Formulario from "@/components/form";
 
-export default function Edit({ params }: { params: { id: string } }) {
+export default function Edit({ params }: { params: { id: number } }) {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.container}>

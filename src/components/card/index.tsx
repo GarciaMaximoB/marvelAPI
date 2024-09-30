@@ -2,18 +2,25 @@
 import styles from "./index.module.scss";
 import { StarOutlined, StarFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+
 import { IComic } from "@/types";
+import { ComicsUseCases } from "@/useCases/comicsUseCases";
+import { useEffect, useState } from "react";
+import { GlobalStateService } from "@/services/globalStateService";
 
 export default function Card({ comic }: { comic: IComic }) {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const favourites = GlobalStateService.getFavComicsData();
+
+  const [isFavourite, setIsFavourite] = useState(false);
+
+  useEffect(() => {
+    if (favourites.size > 0) {
+      const favourite = ComicsUseCases.IsInFavourites(comic.id);
+      setIsFavourite(favourite);
+    }
+  }, [favourites]);
 
   const router = useRouter();
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
-
   if (!comic) return <div>No hay comics</div>;
 
   return (
@@ -32,14 +39,10 @@ export default function Card({ comic }: { comic: IComic }) {
         <p className={styles.comicPages}>{comic.pageCount} páginas</p>
       </div>
 
-      {isFavorite ? (
-        <StarFilled
-          className={styles.comicFav}
-          onClick={toggleFavorite}
-          style={{ color: "#fcba03" }}
-        />
+      {isFavourite ? (
+        <StarFilled className={styles.comicFav} style={{ color: "#fcba03" }} />
       ) : (
-        <StarOutlined className={styles.comicFav} onClick={toggleFavorite} />
+        <StarOutlined className={styles.comicFav} />
       )}
     </div>
   );
