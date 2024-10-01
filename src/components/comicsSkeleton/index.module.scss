@@ -1,0 +1,58 @@
+.skeletonCard {
+  padding: 20px;
+  background-color: rgba(217, 217, 217, 0.25);
+  border-radius: 27px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  animation: pulse 1.5s infinite ease-in-out;
+  flex: 1 1 calc(25% - 45px);
+  width: 100%;
+  min-width: 100%;
+}
+
+.skeletonImage {
+  width: 100%;
+  height: 300px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.skeletonText {
+  width: 60%;
+  height: 16px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.skeletonFav {
+  align-self: flex-end;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  margin-top: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}

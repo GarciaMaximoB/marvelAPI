@@ -5,6 +5,7 @@ import styles from "./index.module.scss";
 import Card from "../card";
 import { useEffect, useState } from "react";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
+import SkeletonCard from "../comicsSkeleton";
 
 export default function Comics() {
   const [loading, setLoading] = useState(true);
@@ -20,12 +21,14 @@ export default function Comics() {
       });
   }, []);
 
-  if (loading) return <p>Cargando comics...</p>;
-
   return (
     <div className={styles.cardsWrapper}>
-      {Array.isArray(comics) &&
-        comics.map((comic) => <Card key={comic.id} comic={comic} />)}
+      {loading
+        ? Array(8)
+            .fill(null)
+            .map((_, index) => <SkeletonCard key={index} />)
+        : Array.isArray(comics) &&
+          comics.map((comic) => <Card key={comic.id} comic={comic} />)}
     </div>
   );
 }
