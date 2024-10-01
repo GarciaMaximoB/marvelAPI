@@ -42,7 +42,7 @@ const retrieveFavComics = async () => {
 };
 
 const IsInFavourites = (id: number): boolean => {
-  const favourites = GlobalStateService.getFavComicsDataOutsideComponent();
+  const favourites = GlobalStateService.getFavComicsData();
   console.log(favourites);
   if (favourites.size >= 1) {
     return favourites.has(id);
@@ -50,11 +50,14 @@ const IsInFavourites = (id: number): boolean => {
   return false;
 };
 
-const addToFavourites = async (id: number) => {
+const toggleFavourite = async (comic: IComic) => {
   const favourites = GlobalStateService.getFavComicsDataOutsideComponent();
-  if (favourites.has(id)) {
-    await APIService.deleteFromFavourites(id);
+  if (favourites.has(comic.id)) {
+    GlobalStateService.removeComicFromFavourites(comic);
+    await APIService.deleteFromFavourites(comic.id);
   } else {
+    GlobalStateService.addToFavourites(comic);
+    await APIService.addToFavourites(comic);
   }
 };
 
@@ -63,5 +66,5 @@ export const ComicsUseCases = {
   retrieveComic,
   retrieveFavComics,
   IsInFavourites,
-  addToFavourites,
+  toggleFavourite,
 };

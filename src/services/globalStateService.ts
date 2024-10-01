@@ -79,16 +79,23 @@ export const GlobalStateService = {
     }));
   },
 
-  removeComicFromFavourites(comicId: number) {
-    const favComics = this.getFavComicsData() || new Map();
-    favComics.delete(comicId);
-    this.setFavComicsData(favComics);
+  removeComicFromFavourites(comic: IComic) {
+    globalDataState.setState((prev) => {
+      const newFavComics = new Map(prev.favComics);
+      newFavComics.delete(comic.id);
+  
+      return {
+        ...prev,
+        favComics: newFavComics, 
+      };
+    });
   },
 
   addToFavourites(comic: IComic) {
-    const favComics = this.getFavComicsData() || new Map();
-    favComics.set(comic.id, comic);
-    this.setFavComicsData(favComics);
+    globalDataState.setState((prev) => ({
+      ...prev,
+      favComics: new Map(prev.favComics).set(comic.id, comic),
+    }));
   },
 
   getFavComicsDataOutsideComponent() {

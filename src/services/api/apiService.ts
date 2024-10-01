@@ -40,9 +40,9 @@ const deleteFromFavourites = async (id: number) => {
   }
 };
 
-const toggleFavourite = async (request: any) => {
+const addToFavourites = async (comic: any) => {
   try {
-    await axiosInstance.post("/favcomics", request);
+    await axiosInstance.post("/favcomics", comic);
   } catch (errorAPI: any) {
     console.log({ errorAPI });
     throw new Error(errorAPI.message);
@@ -54,6 +54,7 @@ const APIService = {
   getComic,
   getFavComics,
   deleteFromFavourites,
+  addToFavourites,
 };
 
 export default APIService;
