@@ -30,19 +30,6 @@ export async function GET() {
   }
 }
 
-export async function DELETE(id: number) {
-  try {
-    const res = await serverAxiosInstance.delete(`/favcomics/${id}`);
-
-    return NextResponse.json(res.data);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Error al agregar el comic" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();
