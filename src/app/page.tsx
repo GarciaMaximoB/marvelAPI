@@ -6,8 +6,10 @@ import Comics from "@/components/comics";
 
 import { StarOutlined, PlusOutlined } from "@ant-design/icons";
 import Filters from "@/components/Filters";
+import { useState } from "react";
 
 export default function Home() {
+  const [filter, setFilter] = useState("");
   return (
     <div className={styles.header}>
       <Search />
@@ -23,10 +25,10 @@ export default function Home() {
           </Link>
         </div>
         <div className={styles.filters}>
-          <Filters />
+          <Filters onFilterChange={(value) => setFilter(value)} />
         </div>
       </div>
-      <Comics />
+      <Comics filter={filter} />
     </div>
   );
 }

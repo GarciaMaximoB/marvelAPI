@@ -1,7 +1,10 @@
-"use client";
 import { ConfigProvider, Select } from "antd";
 
-export default function Filters() {
+interface FiltersProps {
+  onFilterChange: (value: string) => void;
+}
+
+export default function Filters({ onFilterChange }: FiltersProps) {
   return (
     <ConfigProvider
       theme={{
@@ -47,6 +50,7 @@ export default function Filters() {
         },
       }}
     >
+
       <Select
         placeholder="Ordenar"
         variant="filled"
@@ -57,15 +61,18 @@ export default function Filters() {
           { value: "database", label: "Cantidad de paginas" },
         ]}
       />
+
       <Select
         placeholder="Filtrar"
         variant="filled"
         style={{ width: "30%" }}
+        onChange={onFilterChange}
         options={[
           { value: "api", label: "Comics existentes" },
           { value: "database", label: "Creados por el usuario" },
         ]}
       />
+
 
       <Select
         showSearch
