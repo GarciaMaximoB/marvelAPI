@@ -1,4 +1,54 @@
 {
-  "favcomics": [],
-  "userComics": []
+  "favcomics": [
+    {
+      "id": 113868,
+      "title": "Ultimate Black Panther (2024) #11",
+      "thumbnail": {
+        "path": "http://i.annihil.us/u/prod/marvel/i/mg/9/a0/66e1ce9a9e250",
+        "extension": "jpg"
+      },
+      "characters": {
+        "available": 0,
+        "collectionURI": "http://gateway.marvel.com/v1/public/comics/113868/characters",
+        "items": [],
+        "returned": 0
+      },
+      "pageCount": 32,
+      "source": "API"
+    },
+    {
+      "id": 1,
+      "title": "My Little Pony",
+      "thumbnail": {
+        "path": "/uploads/my-little-pony",
+        "extension": "webp"
+      },
+      "characters": {
+        "available": 0,
+        "collectionURI": "http://gateway.marvel.com/v1/public/comics/113868/characters",
+        "items": [],
+        "returned": 0
+      },
+      "pageCount": 32,
+      "source": "DATABASE"
+    }
+  ],
+  "usercomics": [
+    {
+      "id": 1,
+      "title": "My Little Pony",
+      "thumbnail": {
+        "path": "/uploads/my-little-pony",
+        "extension": "webp"
+      },
+      "characters": {
+        "available": 0,
+        "collectionURI": "http://gateway.marvel.com/v1/public/comics/113868/characters",
+        "items": [],
+        "returned": 0
+      },
+      "pageCount": 32,
+      "source": "API"
+    }
+  ]
 }

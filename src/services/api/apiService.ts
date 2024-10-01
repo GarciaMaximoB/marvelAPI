@@ -1,9 +1,18 @@
 import { axiosInstance } from "./axiosInstance";
-
 const getComics = async () => {
   try {
-    const { data } = await axiosInstance.get("/comics");
-    return data;
+    const [comicsResponse, userComicsResponse] = await Promise.all([
+      axiosInstance.get("/comics"),
+      axiosInstance.get("/usercomics"),
+    ]);
+
+    const comicsData = comicsResponse.data;
+    const userComicsData = userComicsResponse.data;
+
+    // Combinar los resultados en un solo array
+    const combinedData = [ ...userComicsData, ...comicsData,];
+
+    return combinedData;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
     throw new Error(errorAPI.message);

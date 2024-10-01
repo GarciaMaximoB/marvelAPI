@@ -6,6 +6,7 @@ import { GlobalStateService } from "../services/globalStateService";
 const retrieveComics = async () => {
   try {
     const response = await APIService.getComics();
+    console.log(response)
     GlobalStateService.setComicsData(response);
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });
