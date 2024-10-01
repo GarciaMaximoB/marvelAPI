@@ -1,14 +1,4 @@
 {
-  "favcomics": [
-    {
-      "id": 115541,
-      "title": "Moon Knight: Fist of Khonshu (2024) #3",
-      "description": "SILENT KNIGHT = VIOLENT NIGHT! He may be back from the dead, but Moon Knight is already in the fight of his life, as dangerous operators on both sides of the law target heroes, villains and civilians with callous disregard for safety! Joke's on them, though, because Moon Knight ALSO has a callous disregard for safety…and his is bigger!",
-      "thumbnail": {
-        "path": "https://i.annihil.us/u/prod/marvel/i/mg/6/20/66e1ce210834e",
-        "extension": "jpg"
-      },
-      "pageCount": 32
-    }
-  ]
+  "favcomics": [],
+  "userComics": []
 }
