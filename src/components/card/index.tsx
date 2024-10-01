@@ -15,10 +15,15 @@ export default function Card({ comic }: { comic: IComic }) {
 
   useEffect(() => {
     if (favourites.size > 0) {
-      const favourite = ComicsUseCases.IsInFavourites(comic.id);
+      const favourite = favourites.has(comic.id);
       setIsFavourite(favourite);
     }
+    console.log(favourites)
   }, [favourites]);
+
+  const handleFav = async () => {
+    await ComicsUseCases.toggleFavourite(comic);
+  };
 
   const router = useRouter();
   if (!comic) return <div>No hay comics</div>;
@@ -40,9 +45,13 @@ export default function Card({ comic }: { comic: IComic }) {
       </div>
 
       {isFavourite ? (
-        <StarFilled className={styles.comicFav} style={{ color: "#fcba03" }} />
+        <StarFilled
+          className={styles.comicFav}
+          style={{ color: "#fcba03" }}
+          onClick={handleFav}
+        />
       ) : (
-        <StarOutlined className={styles.comicFav} />
+        <StarOutlined className={styles.comicFav} onClick={handleFav} />
       )}
     </div>
   );
