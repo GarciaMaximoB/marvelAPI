@@ -3,7 +3,12 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const { data } = await apiAxiosInstance.get("/comics");
+    const { data } = await apiAxiosInstance.get("/comics", {
+      params: {
+        format: "comic",
+        dateRange: "1939-01-01,2025-01-01",
+      },
+    });
 
     const comics = data.data.results.map((comic: any) => {
       return {

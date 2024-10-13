@@ -6,8 +6,7 @@ export const apiAxiosInstance = axios.create({
     ts: 1,
     apikey: process.env.NEXT_PUBLIC_API_KEY,
     hash: process.env.NEXT_PUBLIC_HASH,
-    format: "comic",
-    dateRange: "1939-01-01,2025-01-01",
+  
   },
 });
 
