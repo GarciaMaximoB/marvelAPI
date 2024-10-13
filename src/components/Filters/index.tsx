@@ -2,9 +2,13 @@ import { ConfigProvider, Select } from "antd";
 
 interface FiltersProps {
   onFilterChange: (value: string) => void;
+  onOrderChange: (order: string) => void;
 }
 
-export default function Filters({ onFilterChange }: FiltersProps) {
+export default function Filters({
+  onFilterChange,
+  onOrderChange,
+}: FiltersProps) {
   return (
     <ConfigProvider
       theme={{
@@ -50,11 +54,11 @@ export default function Filters({ onFilterChange }: FiltersProps) {
         },
       }}
     >
-
       <Select
         placeholder="Ordenar"
         variant="filled"
         style={{ width: "30%" }}
+        onChange={onOrderChange}
         options={[
           { value: "character", label: "A - Z" },
           { value: "api", label: "Z - A" },
@@ -72,7 +76,6 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           { value: "database", label: "Creados por el usuario" },
         ]}
       />
-
 
       <Select
         showSearch

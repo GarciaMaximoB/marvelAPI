@@ -10,6 +10,8 @@ import { useState } from "react";
 
 export default function Home() {
   const [filter, setFilter] = useState("");
+  const [order, setOrder] = useState("");
+
   return (
     <div className={styles.header}>
       <Search />
@@ -25,10 +27,13 @@ export default function Home() {
           </Link>
         </div>
         <div className={styles.filters}>
-          <Filters onFilterChange={(value) => setFilter(value)} />
+          <Filters
+            onFilterChange={(value) => setFilter(value)}
+            onOrderChange={(value) => setOrder(value)}
+          />
         </div>
       </div>
-      <Comics filter={filter} />
+      <Comics filter={filter} order={order} />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// ./src/components/comics/index.tsx
 import { GlobalStateService } from "@/services/globalStateService";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
 import { useState, useEffect } from "react";
@@ -8,9 +7,10 @@ import Card from "../card";
 
 interface ComicsProps {
   filter: string;
+  order: string;
 }
 
-const Comics: React.FC<ComicsProps> = ({ filter }) => {
+const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData() || [];
 
@@ -24,6 +24,7 @@ const Comics: React.FC<ComicsProps> = ({ filter }) => {
       });
   }, []);
 
+  // Filtrado
   const filteredComics = comics.filter((comic) => {
     if (filter === "api") {
       return comic.source === "API";
@@ -33,14 +34,26 @@ const Comics: React.FC<ComicsProps> = ({ filter }) => {
     return true;
   });
 
+  // Ordenamiento
+  const sortedComics = [...filteredComics].sort((a, b) => {
+    if (order === "character") {
+      return a.title.localeCompare(b.title);
+    } else if (order === "api") {
+      return b.title.localeCompare(a.title);
+    } else if (order === "database") {
+      return b.pageCount - a.pageCount;
+    }
+    return 0;
+  });
+
   return (
     <div className={styles.cardsWrapper}>
       {loading
         ? Array(8)
             .fill(null)
             .map((_, index) => <SkeletonCard key={index} />)
-        : Array.isArray(filteredComics) &&
-          filteredComics.map((comic) => <Card key={comic.id} comic={comic} />)}
+        : Array.isArray(sortedComics) &&
+          sortedComics.map((comic) => <Card key={comic.id} comic={comic} />)}
     </div>
   );
 };
