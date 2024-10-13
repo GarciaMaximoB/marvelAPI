@@ -3,7 +3,13 @@ export interface IComic {
   title: string;
   description: string;
   sale_date: string;
-  characters: {};
+  characters: {
+    available: number;
+    items: {
+      name: string;
+      resourceURI: string;
+    }[];
+  };
   pageCount: number;
   thumbnail: { path: string; extension: string };
   source: string;
