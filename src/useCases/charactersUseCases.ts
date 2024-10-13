@@ -6,7 +6,7 @@ const retrieveCharacters = async () => {
   try {
     const response = await APIService.getCharacters();
     console.log(response);
-    GlobalStateService.setComicsData(response);
+    GlobalStateService.setCharactersData(response);
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });
     ErrorService.handleError(errorUseCase);
