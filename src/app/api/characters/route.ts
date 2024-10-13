@@ -3,7 +3,11 @@ import { apiAxiosInstance } from "../(helpers)/apiAxiosInstance";
 
 export async function GET() {
   try {
-    const { data } = await apiAxiosInstance.get("/characters");
+    const { data } = await apiAxiosInstance.get("/characters", {
+      params: {
+        limit: 100,
+      },
+    });
 
     const characters = data.data.results.map((character: any) => {
       return {
