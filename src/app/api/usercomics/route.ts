@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const { data } = await serverAxiosInstance.get("/usercomics");
-    console.log(data);
 
     const userComics = data.map((comic: any) => {
       return {
@@ -16,7 +15,6 @@ export async function GET() {
         source: "DATABASE",
       };
     });
-    console.log(userComics);
     return NextResponse.json(userComics);
   } catch (error) {
     console.log({ error });

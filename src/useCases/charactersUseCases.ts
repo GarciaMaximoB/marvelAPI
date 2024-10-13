@@ -5,7 +5,6 @@ import { GlobalStateService } from "@/services/globalStateService";
 const retrieveCharacters = async () => {
   try {
     const response = await APIService.getCharacters();
-    console.log(response);
     GlobalStateService.setCharactersData(response);
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });

@@ -18,7 +18,6 @@ export default function Card({ comic }: { comic: IComic }) {
       const favourite = favourites.has(comic.id);
       setIsFavourite(favourite);
     }
-    console.log(favourites)
   }, [favourites]);
 
   const handleFav = async () => {
