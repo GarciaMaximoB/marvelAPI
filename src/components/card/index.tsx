@@ -14,10 +14,8 @@ export default function Card({ comic }: { comic: IComic }) {
   const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
-    if (favourites.size > 0) {
-      const favourite = favourites.has(comic.id);
-      setIsFavourite(favourite);
-    }
+    const favourite = favourites.has(comic.id);
+    setIsFavourite(favourite); 
   }, [favourites]);
 
   const handleFav = async () => {
