@@ -1,14 +1,34 @@
+import { GlobalStateService } from "@/services/globalStateService";
+import { CharacterUseCases } from "@/useCases/charactersUseCases";
 import { ConfigProvider, Select } from "antd";
+import { useEffect, useState } from "react";
 
 interface FiltersProps {
   onFilterChange: (value: string) => void;
-  onOrderChange: (order: string) => void;
+  onOrderChange: (value: string) => void;
+  onCharacterChange: (value: string) => void;
 }
 
 export default function Filters({
   onFilterChange,
   onOrderChange,
+  onCharacterChange,
 }: FiltersProps) {
+  const [loading, setLoading] = useState(true);
+  const [characters, setCharacters] = useState<any[]>([]);
+
+  useEffect(() => {
+    CharacterUseCases.retrieveCharacters()
+      .then(() => {
+        const charactersData =
+          GlobalStateService.getCharactersDataOutsideComponent() || [];
+        setCharacters(charactersData);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <ConfigProvider
       theme={{
@@ -84,13 +104,17 @@ export default function Filters({
         placeholder="Personajes"
         variant="filled"
         style={{ width: "30%" }}
+        loading={loading}
+        onChange={onCharacterChange}
         filterOption={(input, option) =>
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
         }
         options={[
-          { value: "1", label: "Spiderman" },
-          { value: "2", label: "Ironman" },
-          { value: "3", label: "American Captain" },
+          { value: "none", label: "-" },
+          ...characters.map((character: any) => ({
+            value: character.name,
+            label: character.name,
+          })),
         ]}
       />
     </ConfigProvider>

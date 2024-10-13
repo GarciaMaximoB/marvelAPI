@@ -124,6 +124,10 @@ export const GlobalStateService = {
     return globalDataState((state) => state.characters);
   },
 
+  getCharactersDataOutsideComponent(){
+    return globalDataState.getState().characters;
+  },
+
   setCharactersData(charactersData: ICharacter[]) {
     globalDataState.setState({
       characters: charactersData,
