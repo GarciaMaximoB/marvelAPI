@@ -8,9 +8,10 @@ import Card from "../card";
 interface ComicsProps {
   filter: string;
   order: string;
+  character: string;
 }
 
-const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
+const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData() || [];
 
@@ -24,7 +25,7 @@ const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
       });
   }, []);
 
-  const filteredComics = comics.filter((comic) => {
+  let filteredComics = comics.filter((comic) => {
     if (filter === "api") {
       return comic.source === "API";
     } else if (filter === "database") {
@@ -32,6 +33,20 @@ const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
     }
     return true;
   });
+
+  if (character !== "none") {
+    filteredComics = filteredComics.filter((comic) => {
+      if (comic.characters.available > 0) {
+        const match = comic.characters.items.some((char) => {
+          const isMatch =
+            char.name.trim().toLowerCase() === character.trim().toLowerCase();
+          return isMatch;
+        });
+        return match;
+      }
+      return false;
+    });
+  }
 
   const sortedComics = [...filteredComics].sort((a, b) => {
     if (order === "az") {
