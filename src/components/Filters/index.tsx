@@ -60,9 +60,10 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onOrderChange}
         options={[
-          { value: "character", label: "A - Z" },
-          { value: "api", label: "Z - A" },
-          { value: "database", label: "Cantidad de paginas" },
+          { value: "none", label: "-" },
+          { value: "az", label: "A - Z" },
+          { value: "za", label: "Z - A" },
+          { value: "page", label: "Cantidad de paginas" },
         ]}
       />
 
@@ -72,6 +73,7 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onFilterChange}
         options={[
+          { value: "none", label: "-" },
           { value: "api", label: "Comics existentes" },
           { value: "database", label: "Creados por el usuario" },
         ]}

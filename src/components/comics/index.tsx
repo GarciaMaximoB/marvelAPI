@@ -24,7 +24,6 @@ const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
       });
   }, []);
 
-  // Filtrado
   const filteredComics = comics.filter((comic) => {
     if (filter === "api") {
       return comic.source === "API";
@@ -34,13 +33,12 @@ const Comics: React.FC<ComicsProps> = ({ filter, order }) => {
     return true;
   });
 
-  // Ordenamiento
   const sortedComics = [...filteredComics].sort((a, b) => {
-    if (order === "character") {
+    if (order === "az") {
       return a.title.localeCompare(b.title);
-    } else if (order === "api") {
+    } else if (order === "za") {
       return b.title.localeCompare(a.title);
-    } else if (order === "database") {
+    } else if (order === "page") {
       return b.pageCount - a.pageCount;
     }
     return 0;
