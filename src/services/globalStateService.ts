@@ -1,11 +1,12 @@
 import { create } from "zustand";
-import { IComic } from "@/types";
+import { ICharacter, IComic } from "@/types";
 
 interface IDataGlobalState {
   comics: IComic[];
   favComics: Map<number, IComic>;
   comic: IComic;
   userComics: IComic[];
+  characters: ICharacter[];
 }
 const initialData: IDataGlobalState = {
   comics: [],
@@ -16,11 +17,12 @@ const initialData: IDataGlobalState = {
     title: "",
     description: "",
     sale_date: "",
-    characters: [],
+    characters: {},
     pageCount: 0,
     thumbnail: { path: "", extension: "" },
     source: "",
   },
+  characters: [],
 };
 
 const globalDataState = create(() => initialData);
@@ -116,5 +118,22 @@ export const GlobalStateService = {
 
   getFavComicsDataOutsideComponent() {
     return globalDataState.getState().favComics;
+  },
+
+  getCharactersData() {
+    return globalDataState((state) => state.characters);
+  },
+
+  setCharactersData(charactersData: ICharacter[]) {
+    globalDataState.setState({
+      characters: charactersData,
+    });
+  },
+
+  removeCharactersData() {
+    globalDataState.setState((prev) => ({
+      ...prev,
+      characters: [],
+    }));
   },
 };
