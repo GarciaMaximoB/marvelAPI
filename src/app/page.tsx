@@ -7,11 +7,12 @@ import Comics from "@/components/comics";
 import { StarOutlined, PlusOutlined } from "@ant-design/icons";
 import Filters from "@/components/Filters";
 import { useState } from "react";
+import Paginacion from "@/components/paginacion";
 
 export default function Home() {
   const [filter, setFilter] = useState("none");
   const [order, setOrder] = useState("none");
-  const [character, setCharacter] = useState("none"); // Nuevo estado para el personaje
+  const [character, setCharacter] = useState("none");
 
   return (
     <div className={styles.header}>
@@ -31,12 +32,13 @@ export default function Home() {
           <Filters
             onFilterChange={(value) => setFilter(value)}
             onOrderChange={(value) => setOrder(value)}
-            onCharacterChange={(value) => setCharacter(value)} // Manejar el cambio de personaje
+            onCharacterChange={(value) => setCharacter(value)}
           />
         </div>
       </div>
-      {/* Pasar el filtro por personaje también a Comics */}
+
       <Comics filter={filter} order={order} character={character} />
+      <Paginacion />
     </div>
   );
 }
