@@ -13,6 +13,7 @@ export default function Home() {
   const [filter, setFilter] = useState("none");
   const [order, setOrder] = useState("none");
   const [character, setCharacter] = useState("none");
+  
 
   return (
     <div className={styles.header}>

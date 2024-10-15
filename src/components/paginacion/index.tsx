@@ -1,11 +1,14 @@
-"use client";
 import { ConfigProvider, Pagination } from "antd";
 import styles from "./index.module.scss";
-import { useState } from "react";
+import { GlobalStateService } from "@/services/globalStateService";
 
 export default function Paginacion() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 20;
+  const currentPage = GlobalStateService.getCurrentPage();
+  const totalItems = GlobalStateService.getTotalItems();
+
+  const handlePageChange = (page: number) => {
+    GlobalStateService.setCurrentPage(page);
+  };
 
   return (
     <ConfigProvider
@@ -61,10 +64,11 @@ export default function Paginacion() {
     >
       <Pagination
         className={styles.pagination}
-        defaultCurrent={1}
-        total={100}
+        current={currentPage}
         showSizeChanger={false}
-        pageSize={20}
+        onChange={handlePageChange}
+        total={totalItems}
+        pageSize={16}
       />
     </ConfigProvider>
   );

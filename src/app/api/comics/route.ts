@@ -1,9 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { apiAxiosInstance } from "../(helpers)/apiAxiosInstance";
 import { NextResponse } from "next/server";
 import { IComic } from "@/types";
 import { serverAxiosInstance } from "../(helpers)/serverAxiosInstace";
-import { axiosInstance } from "@/services/api/axiosInstance";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -68,7 +66,6 @@ export async function GET(req: Request) {
             source: "API",
           })
         );
-        console.log(marvelComics);
         resultComics = resultComics.concat(marvelComics);
       }
     } else {

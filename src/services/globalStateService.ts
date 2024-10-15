@@ -7,6 +7,9 @@ interface IDataGlobalState {
   comic: IComic;
   userComics: IComic[];
   characters: ICharacter[];
+  currentPage: number;
+
+  totalItems: number;
 }
 const initialData: IDataGlobalState = {
   comics: [],
@@ -17,12 +20,14 @@ const initialData: IDataGlobalState = {
     title: "",
     description: "",
     sale_date: "",
-    characters: {},
+    characters: { available: 0, items: [] },
     pageCount: 0,
     thumbnail: { path: "", extension: "" },
     source: "",
   },
   characters: [],
+  currentPage: 1,
+  totalItems: 0,
 };
 
 const globalDataState = create(() => initialData);
@@ -124,7 +129,7 @@ export const GlobalStateService = {
     return globalDataState((state) => state.characters);
   },
 
-  getCharactersDataOutsideComponent(){
+  getCharactersDataOutsideComponent() {
     return globalDataState.getState().characters;
   },
 
@@ -139,5 +144,27 @@ export const GlobalStateService = {
       ...prev,
       characters: [],
     }));
+  },
+
+  getCurrentPage() {
+    return globalDataState((state) => state.currentPage);
+  },
+  getCurrentPageOutsideComponent() {
+    return globalDataState.getState().currentPage;
+  },
+  setCurrentPage(page: number) {
+    globalDataState.setState({ currentPage: page });
+  },
+
+  getTotalItems() {
+    return globalDataState((state) => state.totalItems);
+  },
+  getTotalItemsOutsideComponent() {
+    return globalDataState.getState().totalItems;
+  },
+  setTotalItems(totalItemsData: number) {
+    globalDataState.setState({
+      totalItems: totalItemsData,
+    });
   },
 };

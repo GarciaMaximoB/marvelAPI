@@ -14,8 +14,10 @@ interface ComicsProps {
 const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData() || [];
+  const currentPage = GlobalStateService.getCurrentPage();
 
   useEffect(() => {
+    setLoading(true);
     ComicsUseCases.retrieveComics()
       .then(() => {
         ComicsUseCases.retrieveFavComics();
@@ -23,7 +25,7 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [currentPage]);
 
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {

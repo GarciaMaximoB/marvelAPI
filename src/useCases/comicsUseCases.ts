@@ -4,9 +4,12 @@ import { ErrorService } from "../services/errorService";
 import { GlobalStateService } from "../services/globalStateService";
 
 const retrieveComics = async () => {
+  const page = GlobalStateService.getCurrentPageOutsideComponent();
+  const pageSize = 16;
   try {
-    const response = await APIService.getComics();
-    GlobalStateService.setComicsData(response);
+    const response = await APIService.getComics({ page, pageSize });
+    GlobalStateService.setComicsData(response.data);
+    GlobalStateService.setTotalItems(response.total);
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });
     ErrorService.handleError(errorUseCase);
