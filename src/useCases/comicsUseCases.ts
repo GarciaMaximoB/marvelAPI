@@ -64,10 +64,21 @@ const toggleFavourite = async (comic: IComic) => {
   }
 };
 
+const createComic = async (comic: IComic) => {
+  try {
+    await APIService.createComic(comic);
+    GlobalStateService.createComic(comic);
+  } catch (errorUseCase: any) {
+    console.log({ errorUseCase });
+    ErrorService.handleError(errorUseCase);
+  }
+};
+
 export const ComicsUseCases = {
   retrieveComics,
   retrieveComic,
   retrieveFavComics,
   IsInFavourites,
   toggleFavourite,
+  createComic,
 };

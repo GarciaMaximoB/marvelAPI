@@ -24,3 +24,23 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    const res = await serverAxiosInstance.post("/usercomics", body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return NextResponse.json(res.data);
+  } catch (error) {
+    console.log({ error });
+    return NextResponse.json(
+      { error: "Error al agregar el comic" },
+      { status: 500 }
+    );
+  }
+}

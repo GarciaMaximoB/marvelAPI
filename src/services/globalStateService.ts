@@ -167,4 +167,11 @@ export const GlobalStateService = {
       totalItems: totalItemsData,
     });
   },
+
+  createComic(comic: IComic) {
+    globalDataState.setState((prev) => ({
+      ...prev,
+      userComics: [...prev.userComics, comic],
+    }));
+  },
 };

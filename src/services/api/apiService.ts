@@ -12,7 +12,7 @@ const getComics = async ({
       params: { page, pageSize },
     });
     const data = response.data;
-    console.log(data)
+    console.log(data);
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
@@ -69,6 +69,15 @@ const getCharacters = async () => {
   }
 };
 
+const createComic = async (comic: any) => {
+  try {
+    await axiosInstance.post("/usercomics", comic);
+  } catch (errorApi: any) {
+    console.log({ errorApi });
+    throw new Error(errorApi.message);
+  }
+};
+
 const APIService = {
   getComics,
   getComic,
@@ -76,6 +85,7 @@ const APIService = {
   deleteFromFavourites,
   addToFavourites,
   getCharacters,
+  createComic,
 };
 
 export default APIService;
