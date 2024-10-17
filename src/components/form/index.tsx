@@ -1,5 +1,4 @@
 "use client";
-
 import {
   DatePicker,
   Form,
@@ -12,15 +11,12 @@ import {
   ConfigProvider,
 } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
-import styles from "./index.module.scss";
+import { Field, Formik, Form as FormikForm } from "formik";
+import dayjs from "dayjs";
+import { v4 as uuidv4 } from "uuid";
+import { ComicsUseCases } from "@/useCases/comicsUseCases";
 
 export default function Formulario({ edit }: { edit: boolean }) {
-  const validateMessages = {
-    required: "Se requiere ${label}!",
-    types: {
-      number: "${label} no es un numero válido!",
-    },
-  };
   const normFile = (e: any) => {
     console.log("Upload event:", e);
     if (Array.isArray(e)) {
@@ -28,21 +24,37 @@ export default function Formulario({ edit }: { edit: boolean }) {
     }
     return e?.fileList;
   };
-  const config = {
-    rules: [
-      {
-        type: "object" as const,
-        required: true,
-        message: "Por favor elija la fecha de lanzamiento!",
+
+  const handleSubmit = async (values: any) => {
+    const formattedValues = {
+      ...values,
+      comic: {
+        ...values.comic,
+        date: values.comic.date
+          ? dayjs(values.comic.date).format("DD-MM-YYYY")
+          : undefined,
       },
-    ],
-  };
-  const onFinish = (fieldsValue: any) => {
-    const values = {
-      ...fieldsValue,
-      "date-picker": fieldsValue["date-picker"].format("YYYY-MM-DD"),
     };
-    console.log("Received values of form: ", values);
+    const id = uuidv4()
+      .replace(/[^0-9]/g, "")
+      .substr(0, 10);
+
+    console.log(formattedValues);
+
+    const comic = {
+      id: id,
+      title: formattedValues.comic.name,
+      thumbnail: {
+        path: "/uploads/my-little-pony",
+        extension: "webp",
+      },
+      pageCount: formattedValues.comic.pages,
+      source: "DATABASE",
+      description: formattedValues.comic.description,
+      sale_date: formattedValues.comic.date,
+    };
+
+    await ComicsUseCases.createComic(comic);
   };
 
   return (
@@ -89,77 +101,111 @@ export default function Formulario({ edit }: { edit: boolean }) {
         },
       }}
     >
-      <Form
-        name="time_related_controls"
-        onFinish={onFinish}
-        style={{ width: 600 }}
-        validateMessages={validateMessages}
-        layout="vertical"
+      <Formik
+        initialValues={{
+          comic: {
+            name: "",
+            pages: 0,
+            date: null,
+            description: "",
+            image: [],
+          },
+        }}
+        onSubmit={(values) => handleSubmit(values)}
       >
-        <Form.Item
-          name={["comic", "name"]}
-          label="Nombre"
-          rules={[{ required: true }]}
-          style={{ width: "100%" }}
-        >
-          <Input />
-        </Form.Item>
-
-        <Row gutter={16}>
-          <Col span={12}>
+        {({ setFieldValue, handleSubmit }) => (
+          <FormikForm onSubmit={handleSubmit} style={{ width: 600 }}>
             <Form.Item
-              name={["comic", "paginas"]}
-              label="Cantidad de páginas"
-              rules={[{ type: "number", min: 0, max: 200, required: true }]}
+              label="Nombre"
               style={{ width: "100%" }}
+              layout="vertical"
             >
-              <InputNumber
-                className={styles.paginas}
-                style={{ width: "100%" }}
-              />
+              <Field name="comic.name">
+                {({ field }: { field: any }) => (
+                  <Input {...field} placeholder="Nombre del cómic" />
+                )}
+              </Field>
             </Form.Item>
-          </Col>
-          <Col span={12}>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Cantidad de páginas"
+                  style={{ width: "100%" }}
+                  layout="vertical"
+                >
+                  <Field name="comic.pages">
+                    {({ field }: { field: any }) => (
+                      <InputNumber
+                        {...field}
+                        style={{ width: "100%" }}
+                        min={0}
+                        max={200}
+                        onChange={(value) =>
+                          setFieldValue("comic.pages", value)
+                        }
+                      />
+                    )}
+                  </Field>
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label="Fecha de lanzamiento"
+                  style={{ width: "100%" }}
+                  layout="vertical"
+                >
+                  <DatePicker
+                    style={{ width: "100%" }}
+                    onChange={(date) => setFieldValue("comic.date", date)}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+
             <Form.Item
-              name="date-picker"
-              label="Fecha de lanzamiento"
+              label="Descripción"
               style={{ width: "100%" }}
+              layout="vertical"
             >
-              <DatePicker style={{ width: "100%" }} />
+              <Field name="comic.description">
+                {({ field }: { field: any }) => (
+                  <Input.TextArea {...field} style={{ height: 100 }} />
+                )}
+              </Field>
             </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item name={["comic", "description"]} label="Descripción">
-          <Input.TextArea style={{ height: 100 }} />
-        </Form.Item>
 
-        <Form.Item label="Portada">
-          <Form.Item
-            name="dragger"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-            noStyle
-          >
-            <Upload.Dragger name="files" action="/upload.do">
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                Hace clic o arrastrá un archivo para subirlo
-              </p>
-              <p className="ant-upload-hint">Solo puedes subir un archivo</p>
-            </Upload.Dragger>
-          </Form.Item>
+            <Form.Item label="Portada" layout="vertical">
+              <Form.Item
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+                noStyle
+              >
+                <Upload.Dragger name="files">
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">
+                    Haz clic o arrastra un archivo para subirlo
+                  </p>
+                  <p className="ant-upload-hint">
+                    Solo puedes subir un archivo
+                  </p>
+                </Upload.Dragger>
+              </Form.Item>
+            </Form.Item>
 
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ width: "100%", marginTop: "30px" }}
-          >
-            {edit ? "Editar comic" : "Crear comic"}
-          </Button>
-        </Form.Item>
-      </Form>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: "100%", marginTop: "30px" }}
+            >
+              {edit ? "Editar comic" : "Crear comic"}
+            </Button>
+          </FormikForm>
+        )}
+      </Formik>
     </ConfigProvider>
   );
 }
