@@ -15,7 +15,7 @@ export default function Card({ comic }: { comic: IComic }) {
 
   useEffect(() => {
     const favourite = favourites.has(comic.id);
-    setIsFavourite(favourite); 
+    setIsFavourite(favourite);
   }, [favourites]);
 
   const handleFav = async () => {
@@ -31,7 +31,11 @@ export default function Card({ comic }: { comic: IComic }) {
         <img
           src={`${
             comic
-              ? `${comic.thumbnail.path}.${comic.thumbnail.extension}`
+              ? `${comic.thumbnail.path}${
+                  comic.thumbnail.extension
+                    ? `.${comic.thumbnail.extension}`
+                    : ""
+                }`
               : "/logoMarvel.png"
           }`}
           alt={comic ? comic.title : ""}
