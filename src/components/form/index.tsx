@@ -14,6 +14,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import { Field, Formik, Form as FormikForm } from "formik";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
 
 export default function Formulario({ edit }: { edit: boolean }) {
@@ -25,7 +26,27 @@ export default function Formulario({ edit }: { edit: boolean }) {
     return e?.fileList;
   };
 
+  const uploadImageToCloudinary = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "Marvel");
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dtghwrcys/image/upload",
+        formData
+      );
+      return response.data.secure_url;
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+    }
+  };
+
   const handleSubmit = async (values: any) => {
+    const file = values.comic.image[0]?.originFileObj;
+    console.log(file);
+    const imageUrl = await uploadImageToCloudinary(file);
+
     const formattedValues = {
       ...values,
       comic: {
@@ -33,20 +54,20 @@ export default function Formulario({ edit }: { edit: boolean }) {
         date: values.comic.date
           ? dayjs(values.comic.date).format("DD-MM-YYYY")
           : undefined,
+        imageUrl: imageUrl,
       },
     };
+
     const id = uuidv4()
       .replace(/[^0-9]/g, "")
       .substr(0, 10);
-
-    console.log(formattedValues);
 
     const comic = {
       id: id,
       title: formattedValues.comic.name,
       thumbnail: {
-        path: "/uploads/my-little-pony",
-        extension: "webp",
+        path: imageUrl,
+        extension: "",
       },
       pageCount: formattedValues.comic.pages,
       source: "DATABASE",
@@ -182,7 +203,13 @@ export default function Formulario({ edit }: { edit: boolean }) {
                 getValueFromEvent={normFile}
                 noStyle
               >
-                <Upload.Dragger name="files">
+                <Upload.Dragger
+                  name="files"
+                  beforeUpload={() => false}
+                  onChange={(info) =>
+                    setFieldValue("comic.image", info.fileList)
+                  }
+                >
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>

@@ -20,7 +20,7 @@ export async function GET() {
   } catch (error) {
     console.log({ error });
     NextResponse.json(
-      { error: "Error al obtener los comics" },
+      { error: "Error al obtener los personajes" },
       { status: 500 }
     );
   }
