@@ -10,18 +10,55 @@ import {
   Col,
   Row,
   ConfigProvider,
+  notification,
 } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { RadiusBottomrightOutlined, InboxOutlined } from "@ant-design/icons";
 import { Field, Formik, Form as FormikForm } from "formik";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
 import { useState } from "react";
+import type { NotificationArgsProps } from "antd";
+
+type NotificationPlacement = NotificationArgsProps["placement"];
 
 export default function Formulario({ edit }: { edit: boolean }) {
+  const [api, contextHolder] = notification.useNotification();
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const openNotification = (placement: NotificationPlacement) => {
+    notification.success({
+      message: "Cómic creado",
+      description:
+        "Tu cómic ha sido creado exitosamente. Serás redirigido al inicio",
+      placement,
+      duration: 3,
+    });
+  };
+
+  const initialValuesCreate = {
+    comic: {
+      name: "",
+      pages: 0,
+      date: null,
+      description: "",
+      image: [],
+    },
+  };
+
+  const initialValuesEdit = {
+    comic: {
+      name: "Comic editado",
+      pages: 0,
+      date: null,
+      description: "",
+      image: [],
+    },
+  };
+
   const normFile = (e: any) => {
     console.log("Upload event:", e);
     if (Array.isArray(e)) {
@@ -48,40 +85,50 @@ export default function Formulario({ edit }: { edit: boolean }) {
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
-    const file = values.comic.image[0]?.originFileObj;
-    console.log(file);
-    const imageUrl = await uploadImageToCloudinary(file);
 
-    const formattedValues = {
-      ...values,
-      comic: {
-        ...values.comic,
-        date: values.comic.date
-          ? dayjs(values.comic.date).format("DD-MM-YYYY")
-          : undefined,
-        imageUrl: imageUrl,
-      },
-    };
+    try {
+      const file = values.comic.image[0]?.originFileObj;
+      const imageUrl = await uploadImageToCloudinary(file);
 
-    const id = uuidv4()
-      .replace(/[^0-9]/g, "")
-      .substr(0, 10);
+      const formattedValues = {
+        ...values,
+        comic: {
+          ...values.comic,
+          date: values.comic.date
+            ? dayjs(values.comic.date).format("DD-MM-YYYY")
+            : undefined,
+          imageUrl: imageUrl,
+        },
+      };
 
-    const comic = {
-      id: id,
-      title: formattedValues.comic.name,
-      thumbnail: {
-        path: imageUrl,
-        extension: "",
-      },
-      pageCount: formattedValues.comic.pages,
-      source: "DATABASE",
-      description: formattedValues.comic.description,
-      sale_date: formattedValues.comic.date,
-    };
+      const id = uuidv4()
+        .replace(/[^0-9]/g, "")
+        .substr(0, 10);
 
-    await ComicsUseCases.createComic(comic);
-    router.push("/");
+      const comic = {
+        id: id,
+        title: formattedValues.comic.name,
+        thumbnail: {
+          path: imageUrl,
+          extension: "",
+        },
+        pageCount: formattedValues.comic.pages,
+        source: "DATABASE",
+        description: formattedValues.comic.description,
+        sale_date: formattedValues.comic.date,
+      };
+
+      await ComicsUseCases.createComic(comic);
+
+      openNotification("bottomRight");
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+    } catch (error) {
+      console.error("Error creando el cómic", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -129,15 +176,7 @@ export default function Formulario({ edit }: { edit: boolean }) {
       }}
     >
       <Formik
-        initialValues={{
-          comic: {
-            name: "",
-            pages: 0,
-            date: null,
-            description: "",
-            image: [],
-          },
-        }}
+        initialValues={edit ? initialValuesEdit : initialValuesCreate}
         onSubmit={(values) => handleSubmit(values)}
       >
         {({ setFieldValue, handleSubmit }) => (
