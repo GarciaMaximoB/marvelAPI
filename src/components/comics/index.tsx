@@ -25,7 +25,7 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage]);
+  }, [comics, currentPage]);
 
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {

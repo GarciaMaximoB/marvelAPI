@@ -37,13 +37,34 @@
   margin-top: 5px;
 }
 
-.comicFav {
+.comicFav,
+.editButton,
+.deleteButton {
   cursor: pointer;
   align-self: flex-end;
   cursor: pointer;
   transition: transform 0.3s ease, color 0.3s ease;
+  color: white;
 }
 
-.comicFav:hover {
-  transform: scale(1.2); /* Agranda la estrella al pasar el mouse sobre ella */
+.comicFav:hover,
+.editButton:hover,
+.deleteButton:hover {
+  transform: scale(1.2);
+}
+
+.iconsBottom {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iconsBottomLeft {
+  display: flex;
+  gap: 10px;
+}
+.editButton {
+  display: flex;
 }

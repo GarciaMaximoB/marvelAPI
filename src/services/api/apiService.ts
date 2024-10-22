@@ -78,6 +78,15 @@ const createComic = async (comic: any) => {
   }
 };
 
+const deleteUserComic = async (comic: any) => {
+  try {
+    await axiosInstance.delete(`/comics/${comic.id}`);
+  } catch (errorApi: any) {
+    console.log({ errorApi });
+    throw new Error(errorApi.message);
+  }
+};
+
 const APIService = {
   getComics,
   getComic,
@@ -86,6 +95,7 @@ const APIService = {
   addToFavourites,
   getCharacters,
   createComic,
+  deleteUserComic,
 };
 
 export default APIService;

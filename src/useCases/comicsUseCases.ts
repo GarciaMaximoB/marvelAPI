@@ -74,6 +74,16 @@ const createComic = async (comic: IComic) => {
   }
 };
 
+const deleteUserComic = async (comic: IComic) => {
+  try {
+    GlobalStateService.removeUserComic(comic);
+    await APIService.deleteUserComic(comic);
+  } catch (errorUseCase: any) {
+    console.log({ errorUseCase });
+    ErrorService.handleError(errorUseCase);
+  }
+};
+
 export const ComicsUseCases = {
   retrieveComics,
   retrieveComic,
@@ -81,4 +91,5 @@ export const ComicsUseCases = {
   IsInFavourites,
   toggleFavourite,
   createComic,
+  deleteUserComic,
 };

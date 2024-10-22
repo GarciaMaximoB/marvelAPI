@@ -114,6 +114,18 @@ export const GlobalStateService = {
     });
   },
 
+  removeUserComic(comic: IComic) {
+    globalDataState.setState((prev) => {
+      const newUserComics = prev.userComics.filter(
+        (userComic: IComic) => userComic.id !== comic.id
+      );
+      return {
+        ...prev,
+        userComics: newUserComics,
+      };
+    });
+  },
+
   addToFavourites(comic: IComic) {
     globalDataState.setState((prev) => ({
       ...prev,
