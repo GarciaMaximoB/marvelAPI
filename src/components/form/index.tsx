@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import {
   DatePicker,
   Form,
@@ -16,8 +17,11 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
+import { useState } from "react";
 
 export default function Formulario({ edit }: { edit: boolean }) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const normFile = (e: any) => {
     console.log("Upload event:", e);
     if (Array.isArray(e)) {
@@ -43,6 +47,7 @@ export default function Formulario({ edit }: { edit: boolean }) {
   };
 
   const handleSubmit = async (values: any) => {
+    setLoading(true);
     const file = values.comic.image[0]?.originFileObj;
     console.log(file);
     const imageUrl = await uploadImageToCloudinary(file);
@@ -76,6 +81,7 @@ export default function Formulario({ edit }: { edit: boolean }) {
     };
 
     await ComicsUseCases.createComic(comic);
+    router.push("/");
   };
 
   return (
@@ -228,7 +234,7 @@ export default function Formulario({ edit }: { edit: boolean }) {
               htmlType="submit"
               style={{ width: "100%", marginTop: "30px" }}
             >
-              {edit ? "Editar comic" : "Crear comic"}
+              {loading ? "Cargando..." : edit ? "Editar comic" : "Crear comic"}
             </Button>
           </FormikForm>
         )}
