@@ -8,7 +8,7 @@ export default function Edit({ params }: { params: { id: number } }) {
     <div className={styles.pageContainer}>
       <div className={styles.container}>
         <h1>Editando el comic {params.id}</h1>
-        <Formulario edit />
+        <Formulario edit id={params.id} />
       </div>
     </div>
   );

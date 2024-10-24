@@ -13,7 +13,7 @@ interface ComicsProps {
 
 const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
   const [loading, setLoading] = useState(true);
-  const comics = GlobalStateService.getComicsData() || [];
+  const comics = GlobalStateService.getComicsData();
   const currentPage = GlobalStateService.getCurrentPage();
 
   useEffect(() => {
@@ -25,7 +25,8 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [comics, currentPage]);
+  }, [currentPage]);
+
 
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {

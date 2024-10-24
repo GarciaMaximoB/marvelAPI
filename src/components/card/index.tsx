@@ -30,7 +30,6 @@ export default function Card({ comic }: { comic: IComic }) {
     setConfirmLoading(false);
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -52,11 +51,11 @@ export default function Card({ comic }: { comic: IComic }) {
   };
 
   const router = useRouter();
-  if (!comic) return <div>No hay comics</div>;
-
   return (
     <div className={styles.mycard} key={comic.id}>
-      <div onClick={() => router.push(`/comic/${comic.id}`)}>
+      <div
+        onClick={() => router.push(`/comic/${comic.id}?source=${comic.source}`)}
+      >
         <img
           src={`${
             comic
@@ -80,8 +79,8 @@ export default function Card({ comic }: { comic: IComic }) {
               <EditOutlined />
             </Link>
             <Popconfirm
-              title="Title"
-              description="Open Popconfirm with async logic"
+              title="Eliminar comic"
+              description="¿Deseas eliminar este comic?"
               open={open}
               onConfirm={handleOk}
               okButtonProps={{ loading: confirmLoading }}

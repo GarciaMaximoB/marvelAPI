@@ -2,29 +2,54 @@
 import { GlobalStateService } from "@/services/globalStateService";
 import { useEffect, useState } from "react";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
+import { useSearchParams } from "next/navigation";
 
 import styles from "./index.module.scss";
 export default function ComicPage({ params }: { params: { id: number } }) {
   const [loading, setLoading] = useState(true);
   const comic = GlobalStateService.getComicData();
 
+  const searchParams = useSearchParams();
+  const source = searchParams.get("source");
+
   useEffect(() => {
     const id = params.id;
-    ComicsUseCases.retrieveComic({ id }).finally(() => {
-      setLoading(false);
-    });
-  }, [params.id]);
+    if (source == "API") {
+      ComicsUseCases.retrieveComic({ id }).finally(() => {
+        setLoading(false);
+      });
+    } else if (source == "DATABASE") {
+      ComicsUseCases.retrieveUserComic({ id }).finally(() => {
+        console.log(id)
+        setLoading(false);
+      });
+    }
+  }, [params.id, source]);
   if (loading) return <p>Cargando comic...</p>;
   return (
     <div
       className={styles.background}
       style={{
-        backgroundImage: `url(${comic.thumbnail.path}.${comic.thumbnail.extension})`,
+        backgroundImage: `url(${
+          comic
+            ? `${comic.thumbnail.path}${
+                comic.thumbnail.extension ? `.${comic.thumbnail.extension}` : ""
+              }`
+            : "/logoMarvel.png"
+        })`,
       }}
     >
       <div className={styles.comicContainer}>
         <img
-          src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+          src={`${
+            comic
+              ? `${comic.thumbnail.path}${
+                  comic.thumbnail.extension
+                    ? `.${comic.thumbnail.extension}`
+                    : ""
+                }`
+              : "/logoMarvel.png"
+          }`}
           alt={comic.title}
           className={styles.comicImage}
         />
