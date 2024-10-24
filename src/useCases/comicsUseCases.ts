@@ -28,6 +28,17 @@ const retrieveComic = async ({ id }: { id: number }) => {
   }
 };
 
+const retrieveUserComic = async ({ id }: { id: number }) => {
+  try {
+    const response = await APIService.getUserComic({ id });
+    GlobalStateService.setComicData(response);
+  } catch (errorUseCase: any) {
+    console.log({ errorUseCase });
+    ErrorService.handleError(errorUseCase);
+    GlobalStateService.removeComicData();
+  }
+};
+
 const retrieveFavComics = async () => {
   try {
     const response = await APIService.getFavComics();
@@ -46,7 +57,6 @@ const retrieveFavComics = async () => {
 
 const IsInFavourites = (id: number): boolean => {
   const favourites = GlobalStateService.getFavComicsData();
-  console.log(favourites);
   if (favourites.size >= 1) {
     return favourites.has(id);
   }
@@ -76,8 +86,9 @@ const createComic = async (comic: IComic) => {
 
 const deleteUserComic = async (comic: IComic) => {
   try {
-    GlobalStateService.removeUserComic(comic);
     await APIService.deleteUserComic(comic);
+    GlobalStateService.removeUserComic(comic);
+    await retrieveComics();
   } catch (errorUseCase: any) {
     console.log({ errorUseCase });
     ErrorService.handleError(errorUseCase);
@@ -92,4 +103,5 @@ export const ComicsUseCases = {
   toggleFavourite,
   createComic,
   deleteUserComic,
+  retrieveUserComic,
 };

@@ -12,7 +12,6 @@ const getComics = async ({
       params: { page, pageSize },
     });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
@@ -30,9 +29,22 @@ const getComic = async ({ id }: { id: number }) => {
   }
 };
 
+const getUserComic = async ({ id }: { id: number }) => {
+  try {
+    console.log(id);
+    const { data } = await axiosInstance.get(`/usercomics/${id}`);
+    console.log(data);
+    return data;
+  } catch (errorAPI: any) {
+    console.log({ errorAPI });
+    throw new Error(errorAPI.message);
+  }
+};
+
 const getFavComics = async () => {
   try {
     const { data } = await axiosInstance.get("/favcomics");
+
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
@@ -96,6 +108,7 @@ const APIService = {
   getCharacters,
   createComic,
   deleteUserComic,
+  getUserComic,
 };
 
 export default APIService;

@@ -5,6 +5,7 @@ interface IDataGlobalState {
   comics: IComic[];
   favComics: Map<number, IComic>;
   comic: IComic;
+  userComic: IComic;
   userComics: IComic[];
   characters: ICharacter[];
   currentPage: number;
@@ -16,6 +17,16 @@ const initialData: IDataGlobalState = {
   userComics: [],
   favComics: new Map([]),
   comic: {
+    id: 0,
+    title: "",
+    description: "",
+    sale_date: "",
+    characters: { available: 0, items: [] },
+    pageCount: 0,
+    thumbnail: { path: "", extension: "" },
+    source: "",
+  },
+  userComic: {
     id: 0,
     title: "",
     description: "",
@@ -79,7 +90,7 @@ export const GlobalStateService = {
         title: "",
         description: "",
         sale_date: "",
-        characters: [],
+        characters: { available: 0, items: [] },
         pageCount: 0,
         thumbnail: { path: "", extension: "" },
         source: "",
@@ -185,5 +196,11 @@ export const GlobalStateService = {
       ...prev,
       userComics: [...prev.userComics, comic],
     }));
+  },
+
+  setUserComicData(comicData: IComic) {
+    globalDataState.setState({
+      userComic: comicData,
+    });
   },
 };
