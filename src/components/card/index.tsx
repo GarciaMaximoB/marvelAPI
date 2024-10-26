@@ -55,6 +55,7 @@ export default function Card({ comic }: { comic: IComic }) {
     <div className={styles.mycard} key={comic.id}>
       <div
         onClick={() => router.push(`/comic/${comic.id}?source=${comic.source}`)}
+        className={styles.cardContent}
       >
         <img
           src={`${
