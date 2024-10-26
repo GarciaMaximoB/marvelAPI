@@ -27,7 +27,6 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
       });
   }, [currentPage]);
 
-
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {
       return comic.source === "API";
