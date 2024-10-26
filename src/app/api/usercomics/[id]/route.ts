@@ -28,3 +28,33 @@ export async function GET(req: NextApiRequest, context: any) {
     );
   }
 }
+
+export async function PUT(req: Request, context: any) {
+  const { params } = context;
+  try {
+    const updateData = await req.json();
+    const { data } = await serverAxiosInstance.put(
+      `/usercomics/${params.id}`,
+      updateData
+    );
+
+    console.log(data);
+    const updatedUserComic = {
+      id: data.id,
+      title: data.title,
+      thumbnail: data.thumbnail,
+      sale_date: data.sale_date,
+      description: data.description,
+      pageCount: data.pageCount,
+      source: "DATABASE",
+    };
+
+    return NextResponse.json(updatedUserComic);
+  } catch (error) {
+    console.log({ error });
+    return NextResponse.json(
+      { error: "Error al actualizar el cómic del usuario" },
+      { status: 500 }
+    );
+  }
+}

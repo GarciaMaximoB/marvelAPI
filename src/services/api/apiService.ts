@@ -99,6 +99,15 @@ const deleteUserComic = async (comic: any) => {
   }
 };
 
+const updateUserComic = async (comic: any) => {
+  try {
+    await axiosInstance.put(`/usercomics/${comic.id}`, comic);
+  } catch (errorApi: any) {
+    console.log({ errorApi });
+    throw new Error(errorApi.message);
+  }
+};
+
 const APIService = {
   getComics,
   getComic,
@@ -109,6 +118,7 @@ const APIService = {
   createComic,
   deleteUserComic,
   getUserComic,
+  updateUserComic,
 };
 
 export default APIService;

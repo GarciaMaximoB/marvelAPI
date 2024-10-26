@@ -203,4 +203,19 @@ export const GlobalStateService = {
       userComic: comicData,
     });
   },
+
+  updateUserComic(updatedComic: IComic) {
+    globalDataState.setState((prev) => {
+      const newUserComics = prev.userComics.map((userComic: IComic) =>
+        userComic.id === updatedComic.id
+          ? { ...userComic, ...updatedComic }
+          : userComic
+      );
+
+      return {
+        ...prev,
+        userComics: newUserComics,
+      };
+    });
+  },
 };

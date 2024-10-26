@@ -95,6 +95,16 @@ const deleteUserComic = async (comic: IComic) => {
   }
 };
 
+const updateComic = async (comic: IComic) => {
+  try {
+    await APIService.updateUserComic(comic);
+    GlobalStateService.updateUserComic(comic);
+  } catch (errorUseCase: any) {
+    console.log({ errorUseCase });
+    ErrorService.handleError(errorUseCase);
+  }
+};
+
 export const ComicsUseCases = {
   retrieveComics,
   retrieveComic,
@@ -104,4 +114,5 @@ export const ComicsUseCases = {
   createComic,
   deleteUserComic,
   retrieveUserComic,
+  updateComic,
 };

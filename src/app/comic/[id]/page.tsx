@@ -20,7 +20,6 @@ export default function ComicPage({ params }: { params: { id: number } }) {
       });
     } else if (source == "DATABASE") {
       ComicsUseCases.retrieveUserComic({ id }).finally(() => {
-        console.log(id)
         setLoading(false);
       });
     }
