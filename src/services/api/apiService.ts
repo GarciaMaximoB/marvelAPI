@@ -33,7 +33,6 @@ const getUserComic = async ({ id }: { id: number }) => {
   try {
     console.log(id);
     const { data } = await axiosInstance.get(`/usercomics/${id}`);
-    console.log(data);
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
@@ -44,7 +43,7 @@ const getUserComic = async ({ id }: { id: number }) => {
 const getFavComics = async () => {
   try {
     const { data } = await axiosInstance.get("/favcomics");
-
+    console.log(data);
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });

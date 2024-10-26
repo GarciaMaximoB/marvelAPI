@@ -14,7 +14,7 @@ export async function GET() {
           thumbnail: comic.thumbnail,
           characters: comic.characters,
           pageCount: comic.pageCount,
-          source: "DATABASE",
+          source: "API",
         },
       ])
     );
