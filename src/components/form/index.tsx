@@ -11,6 +11,7 @@ import {
   Row,
   ConfigProvider,
   notification,
+  message,
 } from "antd";
 import { RadiusBottomrightOutlined, InboxOutlined } from "@ant-design/icons";
 import { Field, Formik, Form as FormikForm } from "formik";
@@ -18,22 +19,57 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { ComicsUseCases } from "@/useCases/comicsUseCases";
-import { useState } from "react";
-import type { NotificationArgsProps } from "antd";
+import { useEffect, useState } from "react";
+import type { NotificationArgsProps, UploadProps } from "antd";
+import { GlobalStateService } from "@/services/globalStateService";
 
 type NotificationPlacement = NotificationArgsProps["placement"];
 
-export default function Formulario({ edit }: { edit: boolean }) {
-  const [api, contextHolder] = notification.useNotification();
+const props: UploadProps = {
+  name: "file",
+  onChange(info) {
+    const { status } = info.file;
+    if (status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (status === "done") {
+      message.success(`${info.file.name} file uploaded successfully.`);
+    } else if (status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+  onDrop(e) {
+    console.log("Dropped files", e.dataTransfer.files);
+  },
+};
 
+export default function Formulario({
+  edit,
+  id,
+}: {
+  edit: boolean;
+  id: number;
+}) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const comicState = GlobalStateService.getComicData();
+
+  useEffect(() => {
+    if (edit) {
+      setLoading(true);
+      ComicsUseCases.retrieveUserComic({ id }).finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [id]);
+
   const openNotification = (placement: NotificationPlacement) => {
     notification.success({
-      message: "Cómic creado",
-      description:
-        "Tu cómic ha sido creado exitosamente. Serás redirigido al inicio",
+      message: `Comic ${edit ? "editado" : "creado"}`,
+      description: `Tu comic ha sido ${
+        edit ? "editado" : "creado"
+      } correctamente. Seras redirigido al inicio`,
       placement,
       duration: 3,
     });
@@ -51,14 +87,13 @@ export default function Formulario({ edit }: { edit: boolean }) {
 
   const initialValuesEdit = {
     comic: {
-      name: "Comic editado",
-      pages: 0,
-      date: null,
-      description: "",
-      image: [],
+      name: comicState.title,
+      pages: comicState.pageCount,
+      date: dayjs(comicState.sale_date, "DD-MM-YYYY"),
+      description: comicState.description,
+      image: [comicState.thumbnail],
     },
   };
-
   const normFile = (e: any) => {
     console.log("Upload event:", e);
     if (Array.isArray(e)) {
@@ -87,7 +122,9 @@ export default function Formulario({ edit }: { edit: boolean }) {
     setLoading(true);
 
     try {
-      const file = values.comic.image[0]?.originFileObj;
+      const file =
+        values.comic.image[0]?.originFileObj || values.comic.image[0]?.url;
+      console.log(file);
       const imageUrl = await uploadImageToCloudinary(file);
 
       const formattedValues = {
@@ -106,7 +143,7 @@ export default function Formulario({ edit }: { edit: boolean }) {
         .substr(0, 10);
 
       const comic = {
-        id: id,
+        id: edit ? comicState.id : id,
         title: formattedValues.comic.name,
         thumbnail: {
           path: imageUrl,
@@ -118,7 +155,9 @@ export default function Formulario({ edit }: { edit: boolean }) {
         sale_date: formattedValues.comic.date,
       };
 
-      await ComicsUseCases.createComic(comic);
+      edit
+        ? await ComicsUseCases.updateComic(comic)
+        : await ComicsUseCases.createComic(comic);
 
       openNotification("bottomRight");
       setTimeout(() => {
@@ -130,6 +169,8 @@ export default function Formulario({ edit }: { edit: boolean }) {
       setLoading(false);
     }
   };
+
+  if (loading && edit) return <p>Cargando comic...</p>;
 
   return (
     <ConfigProvider
@@ -179,104 +220,134 @@ export default function Formulario({ edit }: { edit: boolean }) {
         initialValues={edit ? initialValuesEdit : initialValuesCreate}
         onSubmit={(values) => handleSubmit(values)}
       >
-        {({ setFieldValue, handleSubmit }) => (
-          <FormikForm onSubmit={handleSubmit} style={{ width: 600 }}>
-            <Form.Item
-              label="Nombre"
-              style={{ width: "100%" }}
-              layout="vertical"
-            >
-              <Field name="comic.name">
-                {({ field }: { field: any }) => (
-                  <Input {...field} placeholder="Nombre del cómic" />
-                )}
-              </Field>
-            </Form.Item>
+        {({ setFieldValue, handleSubmit, values }) => {
+          // Simulamos la URL de la imagen que recibimos de Cloudinary
+          const imageObject = {
+            path: comicState.thumbnail.path,
+            extension: "", // Ignorado en este caso
+          };
+          // Convierte la URL en un objeto compatible con fileList de Ant Design
+          useEffect(() => {
+            if (imageObject.path) {
+              const fileList = [
+                {
+                  uid: "-1", // Un identificador único
+                  name: "image.jpg", // Nombre del archivo
+                  status: "done", // Estado del archivo
+                  url: imageObject.path, // La URL generada usando el 'path'
+                },
+              ];
+              setFieldValue("comic.image", fileList); // Establecer el valor inicial en Formik
+            }
+          }, [imageObject.path, setFieldValue]);
 
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  label="Cantidad de páginas"
-                  style={{ width: "100%" }}
-                  layout="vertical"
-                >
-                  <Field name="comic.pages">
-                    {({ field }: { field: any }) => (
-                      <InputNumber
-                        {...field}
-                        style={{ width: "100%" }}
-                        min={0}
-                        max={200}
-                        onChange={(value) =>
-                          setFieldValue("comic.pages", value)
-                        }
-                      />
-                    )}
-                  </Field>
-                </Form.Item>
-              </Col>
-
-              <Col span={12}>
-                <Form.Item
-                  label="Fecha de lanzamiento"
-                  style={{ width: "100%" }}
-                  layout="vertical"
-                >
-                  <DatePicker
-                    style={{ width: "100%" }}
-                    onChange={(date) => setFieldValue("comic.date", date)}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Form.Item
-              label="Descripción"
-              style={{ width: "100%" }}
-              layout="vertical"
-            >
-              <Field name="comic.description">
-                {({ field }: { field: any }) => (
-                  <Input.TextArea {...field} style={{ height: 100 }} />
-                )}
-              </Field>
-            </Form.Item>
-
-            <Form.Item label="Portada" layout="vertical">
+          return (
+            <FormikForm onSubmit={handleSubmit} style={{ width: 600 }}>
               <Form.Item
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-                noStyle
+                label="Nombre"
+                style={{ width: "100%" }}
+                layout="vertical"
               >
-                <Upload.Dragger
-                  name="files"
-                  beforeUpload={() => false}
-                  onChange={(info) =>
-                    setFieldValue("comic.image", info.fileList)
-                  }
-                >
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Haz clic o arrastra un archivo para subirlo
-                  </p>
-                  <p className="ant-upload-hint">
-                    Solo puedes subir un archivo
-                  </p>
-                </Upload.Dragger>
+                <Field name="comic.name">
+                  {({ field }: { field: any }) => (
+                    <Input {...field} placeholder="Nombre del cómic" />
+                  )}
+                </Field>
               </Form.Item>
-            </Form.Item>
 
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ width: "100%", marginTop: "30px" }}
-            >
-              {loading ? "Cargando..." : edit ? "Editar comic" : "Crear comic"}
-            </Button>
-          </FormikForm>
-        )}
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="Cantidad de páginas"
+                    style={{ width: "100%" }}
+                    layout="vertical"
+                  >
+                    <Field name="comic.pages">
+                      {({ field }: { field: any }) => (
+                        <InputNumber
+                          {...field}
+                          style={{ width: "100%" }}
+                          min={0}
+                          max={200}
+                          onChange={(value) =>
+                            setFieldValue("comic.pages", value)
+                          }
+                        />
+                      )}
+                    </Field>
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label="Fecha de lanzamiento"
+                    style={{ width: "100%" }}
+                    layout="vertical"
+                  >
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      onChange={(date) => setFieldValue("comic.date", date)}
+                      value={values.comic.date}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Form.Item
+                label="Descripción"
+                style={{ width: "100%" }}
+                layout="vertical"
+              >
+                <Field name="comic.description">
+                  {({ field }: { field: any }) => (
+                    <Input.TextArea {...field} style={{ height: 100 }} />
+                  )}
+                </Field>
+              </Form.Item>
+
+              <Form.Item label="Portada" layout="vertical">
+                <Form.Item
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                  noStyle
+                >
+                  <Upload.Dragger
+                    {...props}
+                    name="files"
+                    beforeUpload={() => false} // Evita la carga automática
+                    onChange={
+                      (info) =>
+                        setFieldValue("comic.image", info.fileList || []) // Asegúrate de que siempre es un array
+                    }
+                    fileList={values.comic.image || []} // Asegúrate de que fileList siempre es un array
+                  >
+                    <p className="ant-upload-drag-icon">
+                      <InboxOutlined />
+                    </p>
+                    <p className="ant-upload-text">
+                      Haz clic o arrastra un archivo para subirlo
+                    </p>
+                    <p className="ant-upload-hint">
+                      Solo puedes subir un archivo
+                    </p>
+                  </Upload.Dragger>
+                </Form.Item>
+              </Form.Item>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%", marginTop: "30px" }}
+              >
+                {loading
+                  ? "Cargando..."
+                  : edit
+                  ? "Editar comic"
+                  : "Crear comic"}
+              </Button>
+            </FormikForm>
+          );
+        }}
       </Formik>
     </ConfigProvider>
   );
