@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { apiAxiosInstance } from "../(helpers)/apiAxiosInstance";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const nameStartsWith = searchParams.get("nameStartsWith") || "";
   try {
     const { data } = await apiAxiosInstance.get("/characters", {
       params: {
-        limit: 100,
+        limit: 10,
+        nameStartsWith: nameStartsWith || undefined,
       },
     });
 

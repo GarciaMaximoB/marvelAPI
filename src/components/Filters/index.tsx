@@ -1,7 +1,8 @@
 import { GlobalStateService } from "@/services/globalStateService";
 import { CharacterUseCases } from "@/useCases/charactersUseCases";
+import { debounce } from "@/utils/debounce";
 import { ConfigProvider, Select } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface FiltersProps {
   onFilterChange: (value: string) => void;
@@ -15,19 +16,42 @@ export default function Filters({
   onCharacterChange,
 }: FiltersProps) {
   const [loading, setLoading] = useState(true);
-  const [characters, setCharacters] = useState<any[]>([]);
+  const [query, setQuery] = useState("");
+  const characters = GlobalStateService.getCharactersDataOutsideComponent();
 
-  useEffect(() => {
-    CharacterUseCases.retrieveCharacters()
-      .then(() => {
-        const charactersData =
-          GlobalStateService.getCharactersDataOutsideComponent() || [];
-        setCharacters(charactersData);
-      })
-      .finally(() => {
+  const onSearch = useCallback(
+    debounce((value: string) => {
+      setLoading(true);
+      CharacterUseCases.retrieveCharacters(value).then(() => {
         setLoading(false);
       });
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    setLoading(true);
+    CharacterUseCases.retrieveCharacters().then(() => {
+      setLoading(false);
+    });
   }, []);
+
+  const debouncedSearch = useCallback(
+    debounce((searchQuery: string) => onSearch(searchQuery), 300),
+    [onSearch]
+  );
+
+  const handleInputChange = (value: string) => {
+    setQuery(value);
+  };
+
+  useEffect(() => {
+    if (query === "") {
+      onSearch("");
+    } else {
+      debouncedSearch(query);
+    }
+  }, [query, debouncedSearch, onSearch]);
 
   return (
     <ConfigProvider
@@ -101,6 +125,7 @@ export default function Filters({
 
       <Select
         showSearch
+        onSearch={handleInputChange}
         placeholder="Personajes"
         variant="filled"
         style={{ width: "30%" }}

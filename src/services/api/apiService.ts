@@ -72,9 +72,11 @@ const addToFavourites = async (comic: any) => {
   }
 };
 
-const getCharacters = async () => {
+const getCharacters = async (nameStartsWith: string) => {
   try {
-    const { data } = await axiosInstance.get("/characters");
+    const { data } = await axiosInstance.get("/characters", {
+      params: { nameStartsWith },
+    });
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });
