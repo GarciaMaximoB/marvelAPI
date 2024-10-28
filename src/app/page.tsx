@@ -13,11 +13,15 @@ export default function Home() {
   const [filter, setFilter] = useState("none");
   const [order, setOrder] = useState("none");
   const [character, setCharacter] = useState("none");
-  
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (searchQuery: string) => {
+    setQuery(searchQuery);
+  };
 
   return (
     <div className={styles.header}>
-      <Search />
+      <Search onSearch={handleSearch} />
       <div className={styles.buttonsContainer}>
         <div className={styles.buttons}>
           <Link href="/create" className={styles.createButton}>
@@ -38,7 +42,12 @@ export default function Home() {
         </div>
       </div>
 
-      <Comics filter={filter} order={order} character={character} />
+      <Comics
+        filter={filter}
+        order={order}
+        character={character}
+        query={query}
+      />
       <Paginacion />
     </div>
   );

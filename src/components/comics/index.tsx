@@ -9,23 +9,24 @@ interface ComicsProps {
   filter: string;
   order: string;
   character: string;
+  query?: string;
 }
 
-const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
+const Comics: React.FC<ComicsProps> = ({ filter, order, character, query }) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData();
   const currentPage = GlobalStateService.getCurrentPage();
 
   useEffect(() => {
     setLoading(true);
-    ComicsUseCases.retrieveComics()
+    ComicsUseCases.retrieveComics(query) 
       .then(() => {
         ComicsUseCases.retrieveFavComics();
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage]);
+  }, [currentPage, query]);
 
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {
@@ -39,12 +40,10 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character }) => {
   if (character !== "none") {
     filteredComics = filteredComics.filter((comic) => {
       if (comic.characters.available > 0) {
-        const match = comic.characters.items.some((char) => {
-          const isMatch =
-            char.name.trim().toLowerCase() === character.trim().toLowerCase();
-          return isMatch;
-        });
-        return match;
+        return comic.characters.items.some(
+          (char) =>
+            char.name.trim().toLowerCase() === character.trim().toLowerCase()
+        );
       }
       return false;
     });
