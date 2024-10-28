@@ -27,6 +27,7 @@ export async function GET(req: Request) {
       params: {
         format: "comic",
         dateRange: "1939-01-01,2025-01-01",
+        titleStartsWith: nameStartsWith || undefined,
         limit: 1,
       },
     });

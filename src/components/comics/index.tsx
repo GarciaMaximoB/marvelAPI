@@ -19,7 +19,7 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character, query }) => {
 
   useEffect(() => {
     setLoading(true);
-    ComicsUseCases.retrieveComics(query) 
+    ComicsUseCases.retrieveComics(query)
       .then(() => {
         ComicsUseCases.retrieveFavComics();
       })
