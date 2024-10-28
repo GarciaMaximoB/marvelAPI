@@ -3,13 +3,15 @@ import { axiosInstance } from "./axiosInstance";
 const getComics = async ({
   page,
   pageSize,
+  nameStartsWith,
 }: {
   page: number;
   pageSize: number;
+  nameStartsWith?: string;
 }) => {
   try {
     const response = await axiosInstance.get("/comics", {
-      params: { page, pageSize },
+      params: { page, pageSize, nameStartsWith },
     });
     const data = response.data;
     return data;

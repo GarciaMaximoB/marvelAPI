@@ -7,6 +7,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "20";
+  const nameStartsWith = searchParams.get("nameStartsWith") || "";
   const pageNumber = parseInt(page, 10);
   const size = parseInt(pageSize, 10);
 
@@ -20,7 +21,7 @@ export async function GET(req: Request) {
   try {
     const userComicsResponse = await serverAxiosInstance.get("/usercomics");
     const userComics = userComicsResponse.data;
-    const totalUserComics = userComics.length; //2
+    const totalUserComics = userComics.length;
 
     const marvelTotalResponse = await apiAxiosInstance.get("/comics", {
       params: {
@@ -54,6 +55,7 @@ export async function GET(req: Request) {
             dateRange: "1939-01-01,2025-01-01",
             limit: marvelEnd,
             offset: marvelStart,
+            titleStartsWith: nameStartsWith || undefined,
           },
         });
         const marvelComics = marvelResponse.data.data.results.map(
@@ -74,6 +76,7 @@ export async function GET(req: Request) {
         params: {
           format: "comic",
           dateRange: "1939-01-01,2025-01-01",
+          titleStartsWith: nameStartsWith || undefined,
           limit: size,
           offset: marvelStart,
         },
