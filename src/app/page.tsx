@@ -11,7 +11,7 @@ import Paginacion from "@/components/paginacion";
 
 export default function Home() {
   const [filter, setFilter] = useState("none");
-  const [order, setOrder] = useState("none");
+  const [order, setOrder] = useState("-onsaleDate");
   const [character, setCharacter] = useState("");
   const [query, setQuery] = useState("");
 

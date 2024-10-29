@@ -9,6 +9,7 @@ export async function GET(req: Request) {
   const pageSize = searchParams.get("pageSize") || "20";
   const nameStartsWith = searchParams.get("nameStartsWith") || "";
   const characters = searchParams.get("characters") || undefined;
+  const order = searchParams.get("order") || "";
 
   const pageNumber = parseInt(page, 10);
   const size = parseInt(pageSize, 10);
@@ -61,6 +62,7 @@ export async function GET(req: Request) {
             offset: marvelStart,
             titleStartsWith: nameStartsWith || undefined,
             characters: characters,
+            orderBy: order,
           },
         });
         const marvelComics = marvelResponse.data.data.results.map(
@@ -85,6 +87,7 @@ export async function GET(req: Request) {
           limit: size,
           offset: marvelStart,
           characters: characters,
+          orderBy: order,
         },
       });
       const marvelComics = marvelResponse.data.data.results.map(

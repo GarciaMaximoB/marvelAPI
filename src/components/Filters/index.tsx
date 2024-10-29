@@ -104,10 +104,9 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onOrderChange}
         options={[
-          { value: undefined, label: "-" },
-          { value: "az", label: "A - Z" },
-          { value: "za", label: "Z - A" },
-          { value: "page", label: "Cantidad de paginas" },
+          { value: "-onsaleDate", label: "Ultimos lanzamientos" },
+          { value: "title", label: "A-Z" },
+          { value: "-title", label: "Z-A" },
         ]}
       />
 
@@ -135,7 +134,7 @@ export default function Filters({
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
         }
         options={[
-          { value: undefined, label: "-" },
+          { value: "", label: "-" },
           ...characters.map((character: any) => ({
             value: character.id,
             label: character.name,

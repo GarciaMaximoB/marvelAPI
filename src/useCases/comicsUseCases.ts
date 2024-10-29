@@ -6,9 +6,11 @@ import { GlobalStateService } from "../services/globalStateService";
 const retrieveComics = async ({
   nameStartsWith,
   characters,
+  order,
 }: {
   nameStartsWith: string;
   characters: number;
+  order: string;
 }) => {
   const page = GlobalStateService.getCurrentPageOutsideComponent();
   const pageSize = 16;
@@ -19,6 +21,7 @@ const retrieveComics = async ({
       pageSize,
       nameStartsWith,
       characters,
+      order,
     });
     GlobalStateService.setComicsData(response.data);
     GlobalStateService.setTotalItems(response.total);

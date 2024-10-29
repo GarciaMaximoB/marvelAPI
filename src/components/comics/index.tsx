@@ -6,14 +6,12 @@ import SkeletonCard from "../comicsSkeleton";
 import Card from "../card";
 
 interface ComicsProps {
-  filter: string;
   order: string;
   characters: number;
   query: string;
 }
 
 const Comics: React.FC<ComicsProps> = ({
-  filter,
   order,
   characters,
   query,
@@ -24,7 +22,7 @@ const Comics: React.FC<ComicsProps> = ({
 
   useEffect(() => {
     setLoading(true);
-    ComicsUseCases.retrieveComics({ nameStartsWith: query, characters })
+    ComicsUseCases.retrieveComics({ nameStartsWith: query, characters, order })
       .then(() => {
         ComicsUseCases.retrieveFavComics();
       })
@@ -33,14 +31,14 @@ const Comics: React.FC<ComicsProps> = ({
       });
   }, [currentPage, query, order, characters]);
 
-  let filteredComics = comics.filter((comic) => {
-    if (filter === "api") {
-      return comic.source === "API";
-    } else if (filter === "database") {
-      return comic.source === "DATABASE";
-    }
-    return true;
-  });
+  // let filteredComics = comics.filter((comic) => {
+  //   if (filter === "api") {
+  //     return comic.source === "API";
+  //   } else if (filter === "database") {
+  //     return comic.source === "DATABASE";
+  //   }
+  //   return true;
+  // });
 
   // if (character !== "none") {
   //   filteredComics = filteredComics.filter((comic) => {
@@ -54,25 +52,14 @@ const Comics: React.FC<ComicsProps> = ({
   //   });
   // }
 
-  const sortedComics = [...filteredComics].sort((a, b) => {
-    if (order === "az") {
-      return a.title.localeCompare(b.title);
-    } else if (order === "za") {
-      return b.title.localeCompare(a.title);
-    } else if (order === "page") {
-      return b.pageCount - a.pageCount;
-    }
-    return 0;
-  });
-
   return (
     <div className={styles.cardsWrapper}>
       {loading
         ? Array(8)
             .fill(null)
             .map((_, index) => <SkeletonCard key={index} />)
-        : Array.isArray(sortedComics) &&
-          sortedComics.map((comic) => <Card key={comic.id} comic={comic} />)}
+        : Array.isArray(comics) &&
+          comics.map((comic) => <Card key={comic.id} comic={comic} />)}
     </div>
   );
 };
