@@ -12,7 +12,7 @@ import Paginacion from "@/components/paginacion";
 export default function Home() {
   const [filter, setFilter] = useState("none");
   const [order, setOrder] = useState("none");
-  const [character, setCharacter] = useState("none");
+  const [character, setCharacter] = useState("");
   const [query, setQuery] = useState("");
 
   const handleSearch = (searchQuery: string) => {
@@ -35,7 +35,9 @@ export default function Home() {
         </div>
         <div className={styles.filters}>
           <Filters
-            onFilterChange={(value) => setFilter(value)}
+            onFilterChange={(value) => {
+              setFilter(value);
+            }}
             onOrderChange={(value) => setOrder(value)}
             onCharacterChange={(value) => setCharacter(value)}
           />
@@ -45,7 +47,7 @@ export default function Home() {
       <Comics
         filter={filter}
         order={order}
-        character={character}
+        characters={character}
         query={query}
       />
       <Paginacion />

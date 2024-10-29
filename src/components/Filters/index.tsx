@@ -104,7 +104,7 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onOrderChange}
         options={[
-          { value: "none", label: "-" },
+          { value: undefined, label: "-" },
           { value: "az", label: "A - Z" },
           { value: "za", label: "Z - A" },
           { value: "page", label: "Cantidad de paginas" },
@@ -117,7 +117,7 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onFilterChange}
         options={[
-          { value: "none", label: "-" },
+          { value: undefined, label: "-" },
           { value: "api", label: "Comics existentes" },
           { value: "database", label: "Creados por el usuario" },
         ]}
@@ -135,9 +135,9 @@ export default function Filters({
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
         }
         options={[
-          { value: "none", label: "-" },
+          { value: undefined, label: "-" },
           ...characters.map((character: any) => ({
-            value: character.name,
+            value: character.id,
             label: character.name,
           })),
         ]}

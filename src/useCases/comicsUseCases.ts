@@ -3,16 +3,22 @@ import APIService from "../services/api/apiService";
 import { ErrorService } from "../services/errorService";
 import { GlobalStateService } from "../services/globalStateService";
 
-const retrieveComics = async (nameStartsWith: string = "") => {
+const retrieveComics = async ({
+  nameStartsWith,
+  characters,
+}: {
+  nameStartsWith: string;
+  characters: number;
+}) => {
   const page = GlobalStateService.getCurrentPageOutsideComponent();
   const pageSize = 16;
-  
 
   try {
     const response = await APIService.getComics({
       page,
       pageSize,
       nameStartsWith,
+      characters,
     });
     GlobalStateService.setComicsData(response.data);
     GlobalStateService.setTotalItems(response.total);
@@ -22,6 +28,7 @@ const retrieveComics = async (nameStartsWith: string = "") => {
     GlobalStateService.removeComicsData();
   }
 };
+
 const retrieveComic = async ({ id }: { id: number }) => {
   try {
     const response = await APIService.getComic({ id });

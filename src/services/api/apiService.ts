@@ -4,16 +4,19 @@ const getComics = async ({
   page,
   pageSize,
   nameStartsWith,
+  characters,
 }: {
   page: number;
   pageSize: number;
   nameStartsWith?: string;
+  characters?: number;
 }) => {
   try {
     const response = await axiosInstance.get("/comics", {
-      params: { page, pageSize, nameStartsWith },
+      params: { page, pageSize, nameStartsWith, characters },
     });
     const data = response.data;
+    console.log(characters);
     return data;
   } catch (errorAPI: any) {
     console.log({ errorAPI });

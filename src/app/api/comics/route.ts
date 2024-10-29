@@ -8,6 +8,8 @@ export async function GET(req: Request) {
   const page = searchParams.get("page") || "1";
   const pageSize = searchParams.get("pageSize") || "20";
   const nameStartsWith = searchParams.get("nameStartsWith") || "";
+  const characters = searchParams.get("characters") || undefined;
+
   const pageNumber = parseInt(page, 10);
   const size = parseInt(pageSize, 10);
 
@@ -28,16 +30,17 @@ export async function GET(req: Request) {
         format: "comic",
         dateRange: "1939-01-01,2025-01-01",
         titleStartsWith: nameStartsWith || undefined,
+        characters: characters,
         limit: 1,
       },
     });
 
-    const marvelTotal = marvelTotalResponse.data.data.total; //49350
+    const marvelTotal = marvelTotalResponse.data.data.total;
 
     const total = totalUserComics + marvelTotal;
 
-    const startIndex = (pageNumber - 1) * size; //0
-    const endIndex = pageNumber * size; //20
+    const startIndex = (pageNumber - 1) * size;
+    const endIndex = pageNumber * size;
 
     let resultComics: IComic[] = [];
 
@@ -57,6 +60,7 @@ export async function GET(req: Request) {
             limit: marvelEnd,
             offset: marvelStart,
             titleStartsWith: nameStartsWith || undefined,
+            characters: characters,
           },
         });
         const marvelComics = marvelResponse.data.data.results.map(
@@ -80,6 +84,7 @@ export async function GET(req: Request) {
           titleStartsWith: nameStartsWith || undefined,
           limit: size,
           offset: marvelStart,
+          characters: characters,
         },
       });
       const marvelComics = marvelResponse.data.data.results.map(

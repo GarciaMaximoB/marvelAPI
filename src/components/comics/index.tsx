@@ -8,25 +8,30 @@ import Card from "../card";
 interface ComicsProps {
   filter: string;
   order: string;
-  character: string;
-  query?: string;
+  characters: number;
+  query: string;
 }
 
-const Comics: React.FC<ComicsProps> = ({ filter, order, character, query }) => {
+const Comics: React.FC<ComicsProps> = ({
+  filter,
+  order,
+  characters,
+  query,
+}) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData();
   const currentPage = GlobalStateService.getCurrentPage();
 
   useEffect(() => {
     setLoading(true);
-    ComicsUseCases.retrieveComics(query)
+    ComicsUseCases.retrieveComics({ nameStartsWith: query, characters })
       .then(() => {
         ComicsUseCases.retrieveFavComics();
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage, query]);
+  }, [currentPage, query, order, characters]);
 
   let filteredComics = comics.filter((comic) => {
     if (filter === "api") {
@@ -37,17 +42,17 @@ const Comics: React.FC<ComicsProps> = ({ filter, order, character, query }) => {
     return true;
   });
 
-  if (character !== "none") {
-    filteredComics = filteredComics.filter((comic) => {
-      if (comic.characters.available > 0) {
-        return comic.characters.items.some(
-          (char) =>
-            char.name.trim().toLowerCase() === character.trim().toLowerCase()
-        );
-      }
-      return false;
-    });
-  }
+  // if (character !== "none") {
+  //   filteredComics = filteredComics.filter((comic) => {
+  //     if (comic.characters.available > 0) {
+  //       return comic.characters.items.some(
+  //         (char) =>
+  //           char.name.trim().toLowerCase() === character.trim().toLowerCase()
+  //       );
+  //     }
+  //     return false;
+  //   });
+  // }
 
   const sortedComics = [...filteredComics].sort((a, b) => {
     if (order === "az") {
