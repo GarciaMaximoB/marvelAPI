@@ -17,6 +17,7 @@ export default function Filters({
 }: FiltersProps) {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [disableDefaultFilter, setDisableDefaultFilter] = useState(false);
   const characters = GlobalStateService.getCharactersDataOutsideComponent();
 
   const onSearch = useCallback(
@@ -52,6 +53,11 @@ export default function Filters({
       debouncedSearch(query);
     }
   }, [query, debouncedSearch, onSearch]);
+
+  const handleOrderChange = (value: string) => {
+    onOrderChange(value);
+    setDisableDefaultFilter(value === "title" || value === "-title");
+  };
 
   return (
     <ConfigProvider
@@ -102,9 +108,9 @@ export default function Filters({
         placeholder="Ordenar"
         variant="filled"
         style={{ width: "30%" }}
-        onChange={onOrderChange}
+        onChange={handleOrderChange}
         options={[
-          { value: "-onsaleDate", label: "Ultimos lanzamientos" },
+          { value: "-onsaleDate", label: "Últimos lanzamientos" },
           { value: "title", label: "A-Z" },
           { value: "-title", label: "Z-A" },
         ]}
@@ -116,7 +122,7 @@ export default function Filters({
         style={{ width: "30%" }}
         onChange={onFilterChange}
         options={[
-          { value: undefined, label: "-" },
+          { value: "", label: "Todos", disabled: disableDefaultFilter },
           { value: "API", label: "Comics existentes" },
           { value: "user", label: "Creados por el usuario" },
         ]}

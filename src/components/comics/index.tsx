@@ -38,27 +38,6 @@ const Comics: React.FC<ComicsProps> = ({
       });
   }, [currentPage, query, order, characters, filter]);
 
-  // let filteredComics = comics.filter((comic) => {
-  //   if (filter === "api") {
-  //     return comic.source === "API";
-  //   } else if (filter === "database") {
-  //     return comic.source === "DATABASE";
-  //   }
-  //   return true;
-  // });
-
-  // if (character !== "none") {
-  //   filteredComics = filteredComics.filter((comic) => {
-  //     if (comic.characters.available > 0) {
-  //       return comic.characters.items.some(
-  //         (char) =>
-  //           char.name.trim().toLowerCase() === character.trim().toLowerCase()
-  //       );
-  //     }
-  //     return false;
-  //   });
-  // }
-
   return (
     <div className={styles.cardsWrapper}>
       {loading

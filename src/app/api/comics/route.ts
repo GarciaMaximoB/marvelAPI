@@ -29,7 +29,7 @@ export async function GET(req: Request) {
 
     // Obtener cómics solo si source incluye "user" y no hay filtros de personajes u orden.
     if (!source || source === "user") {
-      if (!characters && !order) {
+      if ((!characters && order === "-onsaleDate") || !order) {
         const userComicsResponse = await serverAxiosInstance.get("/usercomics");
         userComics = userComicsResponse.data;
         totalUserComics = userComics.length;
@@ -56,10 +56,10 @@ export async function GET(req: Request) {
     let resultComics: IComic[] = [];
 
     if (
-      (!source || source === "user") &&
-      !characters &&
-      !order &&
-      startIndex < totalUserComics
+      ((!source || source === "user") &&
+        !characters &&
+        order === "-onsaleDate") ||
+      (!order && startIndex < totalUserComics)
     ) {
       const userStart = startIndex;
       const userEnd = Math.min(endIndex, totalUserComics);
