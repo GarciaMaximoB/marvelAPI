@@ -6,16 +6,18 @@ const getComics = async ({
   nameStartsWith,
   characters,
   order,
+  source,
 }: {
   page: number;
   pageSize: number;
   nameStartsWith?: string;
   characters?: number;
   order?: string;
+  source?: string;
 }) => {
   try {
     const response = await axiosInstance.get("/comics", {
-      params: { page, pageSize, nameStartsWith, characters, order },
+      params: { page, pageSize, nameStartsWith, characters, order, source },
     });
     const data = response.data;
     console.log(characters);

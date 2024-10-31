@@ -9,12 +9,14 @@ interface ComicsProps {
   order: string;
   characters: number;
   query: string;
+  filter: string;
 }
 
 const Comics: React.FC<ComicsProps> = ({
   order,
   characters,
   query,
+  filter,
 }) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData();
@@ -22,14 +24,19 @@ const Comics: React.FC<ComicsProps> = ({
 
   useEffect(() => {
     setLoading(true);
-    ComicsUseCases.retrieveComics({ nameStartsWith: query, characters, order })
+    ComicsUseCases.retrieveComics({
+      nameStartsWith: query,
+      characters,
+      order,
+      source: filter,
+    })
       .then(() => {
         ComicsUseCases.retrieveFavComics();
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [currentPage, query, order, characters]);
+  }, [currentPage, query, order, characters, filter]);
 
   // let filteredComics = comics.filter((comic) => {
   //   if (filter === "api") {

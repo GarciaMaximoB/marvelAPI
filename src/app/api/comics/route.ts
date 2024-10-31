@@ -10,6 +10,7 @@ export async function GET(req: Request) {
   const nameStartsWith = searchParams.get("nameStartsWith") || "";
   const characters = searchParams.get("characters") || undefined;
   const order = searchParams.get("order") || "";
+  const source = searchParams.get("source");
 
   const pageNumber = parseInt(page, 10);
   const size = parseInt(pageSize, 10);
@@ -22,36 +23,49 @@ export async function GET(req: Request) {
   }
 
   try {
-    const userComicsResponse = await serverAxiosInstance.get("/usercomics");
-    const userComics = userComicsResponse.data;
-    const totalUserComics = userComics.length;
+    let totalUserComics = 0;
+    let userComics: IComic[] = [];
+    let marvelTotal = 0;
 
-    const marvelTotalResponse = await apiAxiosInstance.get("/comics", {
-      params: {
-        format: "comic",
-        dateRange: "1939-01-01,2025-01-01",
-        titleStartsWith: nameStartsWith || undefined,
-        characters: characters,
-        limit: 1,
-      },
-    });
+    // Obtener cómics solo si source incluye "user" y no hay filtros de personajes u orden.
+    if (!source || source === "user") {
+      if (!characters && !order) {
+        const userComicsResponse = await serverAxiosInstance.get("/usercomics");
+        userComics = userComicsResponse.data;
+        totalUserComics = userComics.length;
+      }
+    }
 
-    const marvelTotal = marvelTotalResponse.data.data.total;
+    if (!source || source === "API") {
+      const marvelTotalResponse = await apiAxiosInstance.get("/comics", {
+        params: {
+          format: "comic",
+          dateRange: "1939-01-01,2025-01-01",
+          titleStartsWith: nameStartsWith || undefined,
+          characters: characters,
+          limit: 1,
+        },
+      });
+      marvelTotal = marvelTotalResponse.data.data.total;
+    }
 
     const total = totalUserComics + marvelTotal;
-
     const startIndex = (pageNumber - 1) * size;
     const endIndex = pageNumber * size;
 
     let resultComics: IComic[] = [];
 
-    if (startIndex < totalUserComics) {
+    if (
+      (!source || source === "user") &&
+      !characters &&
+      !order &&
+      startIndex < totalUserComics
+    ) {
       const userStart = startIndex;
       const userEnd = Math.min(endIndex, totalUserComics);
-      const comicsFromUser = userComics.slice(userStart, userEnd);
-      resultComics = comicsFromUser;
+      resultComics = userComics.slice(userStart, userEnd);
 
-      if (endIndex > totalUserComics) {
+      if ((!source || source === "API") && endIndex > totalUserComics) {
         const marvelStart = 0;
         const marvelEnd = endIndex - totalUserComics;
         const marvelResponse = await apiAxiosInstance.get("/comics", {
@@ -77,7 +91,7 @@ export async function GET(req: Request) {
         );
         resultComics = resultComics.concat(marvelComics);
       }
-    } else {
+    } else if (!source || source === "API") {
       const marvelStart = startIndex - totalUserComics;
       const marvelResponse = await apiAxiosInstance.get("/comics", {
         params: {
@@ -102,10 +116,11 @@ export async function GET(req: Request) {
       );
       resultComics = marvelComics;
     }
+
     return NextResponse.json({ data: resultComics, total });
   } catch (error) {
     console.log({ error });
-    NextResponse.json(
+    return NextResponse.json(
       { error: "Error al obtener los comics" },
       { status: 500 }
     );

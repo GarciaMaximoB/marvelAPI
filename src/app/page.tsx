@@ -10,8 +10,8 @@ import { useState } from "react";
 import Paginacion from "@/components/paginacion";
 
 export default function Home() {
-  const [filter, setFilter] = useState("none");
-  const [order, setOrder] = useState("-onsaleDate");
+  const [filter, setFilter] = useState("");
+  const [order, setOrder] = useState("");
   const [character, setCharacter] = useState("");
   const [query, setQuery] = useState("");
 

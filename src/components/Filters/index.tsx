@@ -117,8 +117,8 @@ export default function Filters({
         onChange={onFilterChange}
         options={[
           { value: undefined, label: "-" },
-          { value: "api", label: "Comics existentes" },
-          { value: "database", label: "Creados por el usuario" },
+          { value: "API", label: "Comics existentes" },
+          { value: "user", label: "Creados por el usuario" },
         ]}
       />
 
