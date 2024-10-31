@@ -3,7 +3,6 @@ import Link from "next/link";
 import styles from "./index.module.scss";
 import Search from "@/components/search";
 import Comics from "@/components/comics";
-
 import { StarOutlined, PlusOutlined } from "@ant-design/icons";
 import Filters from "@/components/Filters";
 import { useState } from "react";
@@ -17,6 +16,17 @@ export default function Home() {
 
   const handleSearch = (searchQuery: string) => {
     setQuery(searchQuery);
+  };
+
+  const handleFilterChange = (value: string) => {
+    setFilter(value);
+  };
+
+  const handleOrderChange = (value: string) => {
+    setOrder(value);
+    if (filter === "") {
+      setFilter("API");
+    }
   };
 
   return (
@@ -35,11 +45,10 @@ export default function Home() {
         </div>
         <div className={styles.filters}>
           <Filters
-            onFilterChange={(value) => {
-              setFilter(value);
-            }}
-            onOrderChange={(value) => setOrder(value)}
-            onCharacterChange={(value) => setCharacter(value)}
+            onFilterChange={handleFilterChange}
+            onOrderChange={handleOrderChange}
+            onCharacterChange={setCharacter}
+            selectedFilter={filter}
           />
         </div>
       </div>

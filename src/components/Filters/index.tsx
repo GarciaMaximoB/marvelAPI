@@ -8,16 +8,19 @@ interface FiltersProps {
   onFilterChange: (value: string) => void;
   onOrderChange: (value: string) => void;
   onCharacterChange: (value: string) => void;
+  selectedFilter: string;
 }
 
 export default function Filters({
   onFilterChange,
   onOrderChange,
   onCharacterChange,
+  selectedFilter,
 }: FiltersProps) {
+  const [internalFilter, setInternalFilter] = useState(selectedFilter);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [disableDefaultFilter, setDisableDefaultFilter] = useState(false);
+  const [disableAllFilter, setDisableAllFilter] = useState(false);
   const characters = GlobalStateService.getCharactersDataOutsideComponent();
 
   const onSearch = useCallback(
@@ -29,6 +32,10 @@ export default function Filters({
     }, 500),
     []
   );
+
+  useEffect(() => {
+    setInternalFilter(selectedFilter);
+  }, [selectedFilter]);
 
   useEffect(() => {
     setLoading(true);
@@ -56,7 +63,7 @@ export default function Filters({
 
   const handleOrderChange = (value: string) => {
     onOrderChange(value);
-    setDisableDefaultFilter(value === "title" || value === "-title");
+    setDisableAllFilter(value === "title" || value === "-title");
   };
 
   return (
@@ -118,11 +125,15 @@ export default function Filters({
 
       <Select
         placeholder="Filtrar"
+        value={internalFilter}
         variant="filled"
         style={{ width: "30%" }}
-        onChange={onFilterChange}
+        onChange={(value) => {
+          setInternalFilter(value);
+          onFilterChange(value);
+        }}
         options={[
-          { value: "", label: "Todos", disabled: disableDefaultFilter },
+          { value: "", label: "Todos", disabled: disableAllFilter },
           { value: "API", label: "Comics existentes" },
           { value: "user", label: "Creados por el usuario" },
         ]}
