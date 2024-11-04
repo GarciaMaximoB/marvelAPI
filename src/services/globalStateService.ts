@@ -9,9 +9,13 @@ interface IDataGlobalState {
   userComics: IComic[];
   characters: ICharacter[];
   currentPage: number;
-
   totalItems: number;
+  filter: string;
+  order: string;
+  charactersFilter: string;
+  query: string;
 }
+
 const initialData: IDataGlobalState = {
   comics: [],
   userComics: [],
@@ -39,6 +43,10 @@ const initialData: IDataGlobalState = {
   characters: [],
   currentPage: 1,
   totalItems: 0,
+  filter: "",
+  order: "",
+  charactersFilter: "",
+  query: "",
 };
 
 const globalDataState = create(() => initialData);
@@ -56,6 +64,46 @@ export const GlobalStateService = {
       ...prev,
       comics: [],
     }));
+  },
+
+  getFilter() {
+    return globalDataState((state) => state.filter);
+  },
+  getOrder() {
+    return globalDataState((state) => state.order);
+  },
+  setOrder(order: string) {
+    globalDataState.setState({
+      order: order,
+    });
+  },
+
+  getCharacters() {
+    return globalDataState((state) => state.charactersFilter);
+  },
+  setCharacters(characters: string) {
+    globalDataState.setState({
+      charactersFilter: characters,
+    });
+  },
+
+  getQuery() {
+    return globalDataState((state) => state.query);
+  },
+  setQuery(query: string) {
+    globalDataState.setState({
+      query: query,
+    });
+  },
+
+  setFilter(filter: string) {
+    globalDataState.setState({
+      filter: filter,
+    });
+  },
+
+  getFilterOutsideComponent() {
+    return globalDataState.getState().filter;
   },
 
   getUserComicsData() {

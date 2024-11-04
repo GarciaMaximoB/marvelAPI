@@ -5,22 +5,18 @@ import styles from "./index.module.scss";
 import SkeletonCard from "../comicsSkeleton";
 import Card from "../card";
 
-interface ComicsProps {
-  order: string;
-  characters: number;
-  query: string;
-  filter: string;
-}
+interface ComicsProps {}
 
-const Comics: React.FC<ComicsProps> = ({
-  order,
-  characters,
-  query,
-  filter,
-}) => {
+const Comics: React.FC<ComicsProps> = ({}) => {
   const [loading, setLoading] = useState(true);
   const comics = GlobalStateService.getComicsData();
   const currentPage = GlobalStateService.getCurrentPage();
+
+  const order = GlobalStateService.getOrder();
+
+  const characters = GlobalStateService.getCharacters();
+  const query = GlobalStateService.getQuery();
+  const filter = GlobalStateService.getFilter();
 
   useEffect(() => {
     setLoading(true);

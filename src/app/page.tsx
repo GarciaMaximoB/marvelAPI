@@ -45,20 +45,14 @@ export default function Home() {
         </div>
         <div className={styles.filters}>
           <Filters
-            onFilterChange={handleFilterChange}
             onOrderChange={handleOrderChange}
             onCharacterChange={setCharacter}
-            selectedFilter={filter}
+            onFilterChange={handleFilterChange}
           />
         </div>
       </div>
 
-      <Comics
-        filter={filter}
-        order={order}
-        characters={character}
-        query={query}
-      />
+      <Comics />
       <Paginacion />
     </div>
   );

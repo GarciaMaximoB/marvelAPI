@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./index.module.scss";
-import { ComicsUseCases } from "@/useCases/comicsUseCases";
 import { GlobalStateService } from "@/services/globalStateService";
 import { debounce } from "@/utils/debounce";
 
@@ -10,23 +9,27 @@ interface SearchProps {
 }
 
 export default function Search({ onSearch }: SearchProps) {
-  const [query, setQuery] = useState("");
+  const [localQuery, setLocalQuery] = useState(GlobalStateService.getQuery());
 
   const debouncedSearch = useCallback(
-    debounce((searchQuery: string) => onSearch(searchQuery), 300),
+    debounce((searchQuery: string) => {
+      onSearch(searchQuery);
+      GlobalStateService.setQuery(searchQuery);
+    }, 300),
     [onSearch]
   );
 
   useEffect(() => {
-    if (query === "") {
+    if (localQuery === "") {
       onSearch("");
+      GlobalStateService.setQuery("");
     } else {
-      debouncedSearch(query);
+      debouncedSearch(localQuery);
     }
-  }, [query, debouncedSearch, onSearch]);
+  }, [localQuery, debouncedSearch, onSearch]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+    setLocalQuery(e.target.value);
   };
 
   return (
@@ -35,7 +38,7 @@ export default function Search({ onSearch }: SearchProps) {
         type="text"
         placeholder="Encuentra tu comic favorito..."
         className={styles.input}
-        value={query}
+        value={localQuery}
         onChange={handleInputChange}
       />
       <button type="submit" className={styles.button}>

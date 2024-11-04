@@ -4,24 +4,20 @@ import { debounce } from "@/utils/debounce";
 import { ConfigProvider, Select } from "antd";
 import { useCallback, useEffect, useState } from "react";
 
-interface FiltersProps {
-  onFilterChange: (value: string) => void;
-  onOrderChange: (value: string) => void;
-  onCharacterChange: (value: string) => void;
-  selectedFilter: string;
-}
-
-export default function Filters({
-  onFilterChange,
-  onOrderChange,
-  onCharacterChange,
-  selectedFilter,
-}: FiltersProps) {
-  const [internalFilter, setInternalFilter] = useState(selectedFilter);
+export default function Filters() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [disableAllFilter, setDisableAllFilter] = useState(false);
+  const [filter, setFilter] = useState(
+    GlobalStateService.getFilterOutsideComponent()
+  );
+
   const characters = GlobalStateService.getCharactersDataOutsideComponent();
+
+  useEffect(() => {
+    const updatedFilter = GlobalStateService.getFilterOutsideComponent();
+    setFilter(updatedFilter);
+  }, [GlobalStateService.getFilterOutsideComponent()]);
 
   const onSearch = useCallback(
     debounce((value: string) => {
@@ -32,11 +28,6 @@ export default function Filters({
     }, 500),
     []
   );
-
-  useEffect(() => {
-    setInternalFilter(selectedFilter);
-  }, [selectedFilter]);
-
   useEffect(() => {
     setLoading(true);
     CharacterUseCases.retrieveCharacters().then(() => {
@@ -62,8 +53,24 @@ export default function Filters({
   }, [query, debouncedSearch, onSearch]);
 
   const handleOrderChange = (value: string) => {
-    onOrderChange(value);
-    setDisableAllFilter(value === "title" || value === "-title");
+    GlobalStateService.setOrder(value);
+    if (value === "title" || value === "-title") {
+      if (filter === "") {
+        GlobalStateService.setFilter("API");
+      }
+      setDisableAllFilter(true);
+    } else {
+      setDisableAllFilter(false);
+    }
+  };
+
+  const handleFilterChange = (value: string) => {
+    GlobalStateService.setFilter(value);
+    setFilter(value);
+  };
+
+  const handleCharacterChange = (value: string) => {
+    GlobalStateService.setCharacters(value);
   };
 
   return (
@@ -113,7 +120,6 @@ export default function Filters({
     >
       <Select
         placeholder="Ordenar"
-        variant="filled"
         style={{ width: "30%" }}
         onChange={handleOrderChange}
         options={[
@@ -125,13 +131,9 @@ export default function Filters({
 
       <Select
         placeholder="Filtrar"
-        value={internalFilter}
-        variant="filled"
+        value={filter}
         style={{ width: "30%" }}
-        onChange={(value) => {
-          setInternalFilter(value);
-          onFilterChange(value);
-        }}
+        onChange={handleFilterChange}
         options={[
           { value: "", label: "Todos", disabled: disableAllFilter },
           { value: "API", label: "Comics existentes" },
@@ -143,10 +145,9 @@ export default function Filters({
         showSearch
         onSearch={handleInputChange}
         placeholder="Personajes"
-        variant="filled"
         style={{ width: "30%" }}
         loading={loading}
-        onChange={onCharacterChange}
+        onChange={handleCharacterChange}
         filterOption={(input, option) =>
           (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
         }
